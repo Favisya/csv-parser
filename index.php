@@ -2,14 +2,14 @@
 
 function parseCsv (string $inputFilePointer)
 {
-    if (file_exists($inputFilePointer)) {
+    if (file_exists ($inputFilePointer) ) {
         echo "File exists\n";
 
         if (is_dir ('output') ) {
             echo "output exist\n";
         } else {
             echo "creating output directory\n";
-            mkdir ('output',0777);
+            mkdir ('output', 0777);
         }
 
 
@@ -17,10 +17,10 @@ function parseCsv (string $inputFilePointer)
 
         $parsedArray =array ();
         foreach ($parseArray as $string) {
-            $res = explode(",",$string);
+            $res = explode(",", $string);
 
             foreach ($res as $i => $str) {
-                $res[$i] = trim($str,'"');
+                $res[$i] = trim($str, '"');
             }
 
             $tempArray = array (
@@ -32,7 +32,7 @@ function parseCsv (string $inputFilePointer)
                 "iso3" => $res[5],
                 "pop" => (integer) $res[6]
             );
-            array_push ($parsedArray,$tempArray);
+            array_push ($parsedArray, $tempArray);
         }
 
     } else {
