@@ -2,6 +2,7 @@
 
 CONST CVS_HEADER = "\"city_ascii\",\"lat\",\"lng\",\"country\",\"iso2\",\"iso3\",\"population\"\n";
 CONST CVS_HEADER_FOURTH = "\"city_ascii\",\"lat\",\"lng\",\"country\",\"iso2\",\"iso3\",\"population\",\"population_formatted\"\n";
+
 CONST FIRST_OUTPUT = "output_data_1.csv";
 CONST SECOND_OUTPUT = "output_data_2.csv";
 CONST THIRD_OUTPUT = "output_data_3.csv";
@@ -17,11 +18,11 @@ function cmp($a, $b)
 
 function parseCsv(string $inputFilePointer)
 {
-    $first_Counter = 0;
-    $second_Counter = 0;
-    $third_Counter = 0;
-    $fourth_Counter = 0;
-    $input_Counter = 0;
+    $firstCounter = 0;
+    $secondCounter = 0;
+    $thirdCounter = 0;
+    $fourthCounter = 0;
+    $inputCounter = 0;
 
     if (file_exists($inputFilePointer) ) {
         echo "File $inputFilePointer exists\n";
@@ -66,7 +67,7 @@ function parseCsv(string $inputFilePointer)
                 }
             }
         }
-        $input_Counter = count($parsedArray) + 1;
+        $inputCounter = count($parsedArray);
 
         if (file_exists("output/".FIRST_OUTPUT)) {
             unlink("output/".FIRST_OUTPUT);
@@ -93,11 +94,9 @@ function parseCsv(string $inputFilePointer)
                     $element["iso2"].",".$element["iso3"].",".$element["population"]."\n";
 
                 file_put_contents('output/'.FIRST_OUTPUT, $inputText, FILE_APPEND);
-                $first_Counter++;
+                $firstCounter++;
             }
         }
-
-        $first_Counter++;
 
         $russianArray = array();
         // 2_filter for city in Russia and sort by population in ASC
@@ -115,7 +114,7 @@ function parseCsv(string $inputFilePointer)
 
             file_put_contents('output/'.SECOND_OUTPUT, $inputText, FILE_APPEND);
         }
-        $second_Counter = count($russianArray) + 1;
+        $secondCounter = count($russianArray);
 
         // 3_filter where lat or lng is minus
         foreach ($parsedArray as $i => $element) {
@@ -124,11 +123,9 @@ function parseCsv(string $inputFilePointer)
                     $element["iso2"].",".$element["iso3"].",".$element["population"]."\n";
 
                 file_put_contents('output/'.THIRD_OUTPUT, $inputText, FILE_APPEND);
-                $third_Counter++;
+                $thirdCounter++;
             }
         }
-
-        $third_Counter++;
 
         // 4_filter add new column population_formatted
         foreach ($parsedArray as $i => $element) {
@@ -155,13 +152,13 @@ function parseCsv(string $inputFilePointer)
             file_put_contents('output/'.FOURTH_OUTPUT, $inputText, FILE_APPEND);
         }
 
-        $fourth_Counter = count($parsedArray) + 1;
+        $fourthCounter = count($parsedArray);
 
-        $outputText = "input rows: ".$input_Counter."\n";
-        $outputText = $outputText."OUTPUT\n".FIRST_OUTPUT." rows: ".$first_Counter."\n";
-        $outputText = $outputText.SECOND_OUTPUT." rows: ".$second_Counter."\n";
-        $outputText = $outputText.THIRD_OUTPUT." rows: ".$third_Counter."\n";
-        $outputText = $outputText.FOURTH_OUTPUT." rows: ".$fourth_Counter."\n";
+        $outputText = "input rows: ".$inputCounter."\n";
+        $outputText = $outputText."OUTPUT\n".FIRST_OUTPUT." rows: ".$firstCounter."\n";
+        $outputText = $outputText.SECOND_OUTPUT." rows: ".$secondCounter."\n";
+        $outputText = $outputText.THIRD_OUTPUT." rows: ".$thirdCounter."\n";
+        $outputText = $outputText.FOURTH_OUTPUT." rows: ".$fourthCounter."\n";
 
         file_put_contents('output/output_info.txt',$outputText);
     } else {
@@ -169,6 +166,3 @@ function parseCsv(string $inputFilePointer)
     }
 }
 
-$inputData = '5_input_data_2.csv';
-
-parseCsv($inputData);
