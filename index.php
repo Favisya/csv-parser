@@ -151,7 +151,6 @@ function parseCsv(string $inputFilePointer)
 
             file_put_contents('output/'.FOURTH_OUTPUT, $inputText, FILE_APPEND);
         }
-
         $fourthCounter = count($parsedArray);
 
         $outputText = "input rows: ".$inputCounter."\n";
