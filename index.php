@@ -10,6 +10,7 @@ function sortByPopulationDesc($a, $b)
     if ($a['population'] == $b['population']) {
         return 0;
     }
+
     return ($a['population'] < $b['population']) ? -1 : 1;
 }
 
@@ -34,11 +35,12 @@ function parseCsv(string $inputFilePointer)
         mkdir('output', 0777);
     }
 
-    $parseData = file ($inputFilePointer,FILE_IGNORE_NEW_LINES);
+    $parseData = file ($inputFilePointer, FILE_IGNORE_NEW_LINES);
     $parsedData = [];
 
     foreach ($parseData as $i => $element) {
         $res = str_getcsv($element, ',');
+
         $tempData = [
             'city'       => $res[0],
             'lat'        => $res[1],
@@ -141,6 +143,7 @@ function parseCsv(string $inputFilePointer)
         fputcsv($fileOpen, $outputText);
         fclose($fileOpen);
     }
+
     $fourthCounter = count($parsedData);
 
     $outputText = 'input rows: '.$inputCounter.PHP_EOL;
