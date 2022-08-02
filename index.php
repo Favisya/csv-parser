@@ -10,10 +10,14 @@ const SECOND_OUTPUT = 'output_data_2.csv';
 const THIRD_OUTPUT  = 'output_data_3.csv';
 const FOURTH_OUTPUT = 'output_data_4.csv';
 
-function parseCsv(string $filePointer, string $directory)
+function parseCsv(string $filePointer, string $directory): bool
 {
     $csvObject  = new CsvFilter();
     $data       = $csvObject->readFile($filePointer);
+
+    if ($data == false) {
+       return false;
+    }
 
     $parsedData = $csvObject->parse($data);
     $header     = $csvObject->getHeader($parsedData);
@@ -44,4 +48,6 @@ function parseCsv(string $filePointer, string $directory)
     $infoObject->writeFile($directory, 'infoAboutFiles.txt', $data);
 
     echo 'Ready!' . PHP_EOL;
+
+    return true;
 }
