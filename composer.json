@@ -1,5 +1,6 @@
 {
     "require": {
-        "squizlabs/php_codesniffer": "*"
+        "squizlabs/php_codesniffer": "*",
+        "phpoffice/phpspreadsheet": "^1.24"
     }
 }
