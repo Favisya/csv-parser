@@ -18,33 +18,27 @@ class FileHandler
     {
         if (is_dir($directoryName)) {
             return false;
-        } else {
-            mkdir($directoryName);
-            return true;
         }
+
+        mkdir($directoryName);
+        return true;
     }
 
     public function readFile(string $file): array
     {
-        $data = [];
         if ($this->isFileExists($file)) {
-            $data = file ($file, FILE_IGNORE_NEW_LINES);
-            return $data;
+            return file($file, FILE_IGNORE_NEW_LINES);
         }
 
-        return $data;
+        return $data = [];
     }
 
     public function  writeFile(string $directory, string $file, $data): bool
     {
         $path = $directory . '/' . $file;
-        if ($this->makeDirectory($directory)) {
-            return false;
-        }
+        $this->makeDirectory($directory);
 
-        file_put_contents($path, $data);
-
-        return true;
+        return (bool) file_put_contents($path, $data);
     }
 
 }

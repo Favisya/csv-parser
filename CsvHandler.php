@@ -2,6 +2,7 @@
 
 class CsvHandler extends FileHandler
 {
+
     public function parse(array $data): array
     {
         $parsedData=[];
@@ -22,19 +23,7 @@ class CsvHandler extends FileHandler
 
     public function getHeader(array $data): array
     {
-        return array_shift($data);
-    }
-
-    public function initializationCsvFile(string $directory, string $file, array $header): bool
-    {
-        $path = $directory . '/' . $file;
-        $this->makeDirectory($directory);
-
-        $fileOpen = fopen($path, 'w');
-        fputcsv($fileOpen, $header);
-        fclose($fileOpen);
-
-        return true;
+        return reset($data);
     }
 
     public function writeFile(string $directory, string $file, $data): bool
@@ -42,7 +31,7 @@ class CsvHandler extends FileHandler
         $path = $directory . '/' . $file;
         $this->makeDirectory($directory);
 
-        $fileOpen = fopen($path, 'a');
+        $fileOpen = fopen($path, 'w');
         foreach ($data as $element) {
             fputcsv($fileOpen, $element);
         }

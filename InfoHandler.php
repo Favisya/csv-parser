@@ -10,7 +10,7 @@ class InfoHandler extends FileHandler
             $files[] = $filename[1];
         }
 
-        $outputText = 'input rows: '. $this->getCountOfRowsInput($filePointer) . PHP_EOL;
+        $outputText = 'input rows: '. $this->getRowsQty($filePointer) . PHP_EOL;
         $outputText .= 'OUTPUT' . PHP_EOL ;
         foreach ($files as $filename) {
             $outputText .= $filename . ' rows: ' . (count(file($directory . '/' . $filename)) - 1) . PHP_EOL;
@@ -19,7 +19,7 @@ class InfoHandler extends FileHandler
         return $outputText;
     }
 
-    private function getCountOfRowsInput($file): int
+    private function getRowsQty($file): int
     {
         return (count(file($file)) - 1);
     }
