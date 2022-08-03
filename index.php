@@ -52,6 +52,11 @@ function handler(
     string $directory,
     string $fileFormat = 'csv'
 ): bool {
+    if ($fileFormat !== 'csv' && $fileFormat !== 'xlsx') {
+        echo'Incorrect file format!' . PHP_EOL;
+        return false;
+    }
+
     $csvObject    = new CsvHandler();
     $xlsxObject   = new XlsxHandler();
     $filterObject = new DataFilter();
@@ -60,10 +65,6 @@ function handler(
 
     if ((bool) $parsedData == false) {
        return false;
-    }
-    if ($fileFormat !== 'csv' && $fileFormat !== 'xlsx') {
-        echo'Incorrect file format!' . PHP_EOL;
-        return false;
     }
 
     $filteredData = $filterObject->filterDataByCountrySplit($parsedData, 1);
