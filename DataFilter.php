@@ -2,32 +2,6 @@
 
 class DataFilter extends CsvHandler
 {
-    private function sortByPopulationDesc($a, $b): int
-    {
-        if ($a['population'] == $b['population']) {
-            return 0;
-        }
-
-        return ($a['population'] < $b['population']) ? -1 : 1;
-    }
-
-
-    private function getFormattedPopulation(int $population, int $byNumber, string $separator): string
-    {
-        $populationFormatted = '';
-        if ($population >= $byNumber) {
-            if ($byNumber === 1) {
-                $remainder = ($population / $byNumber) % ($byNumber * 1000);
-            } else {
-                $remainder = ($population / $byNumber) % $byNumber;
-            }
-
-            if ($remainder !== 0 ) {
-                $populationFormatted = $remainder . "$separator ";
-            }
-        }
-        return $populationFormatted;
-    }
 
     public function FilterDataByCountrySplit(array $data, int $splitToWords): array
     {
@@ -81,5 +55,31 @@ class DataFilter extends CsvHandler
         }
 
         return $resultData;
+    }
+
+    private function sortByPopulationDesc($a, $b): int
+    {
+        if ($a['population'] == $b['population']) {
+            return 0;
+        }
+
+        return ($a['population'] < $b['population']) ? -1 : 1;
+    }
+
+    private function getFormattedPopulation(int $population, int $byNumber, string $separator): string
+    {
+        $populationFormatted = '';
+        if ($population >= $byNumber) {
+            if ($byNumber === 1) {
+                $remainder = ($population / $byNumber) % ($byNumber * 1000);
+            } else {
+                $remainder = ($population / $byNumber) % $byNumber;
+            }
+
+            if ($remainder !== 0 ) {
+                $populationFormatted = $remainder . "$separator ";
+            }
+        }
+        return $populationFormatted;
     }
 }

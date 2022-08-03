@@ -2,6 +2,22 @@
 
 class FileHandler
 {
+    public function readFile(string $file): array
+    {
+        if ($this->isFileExists($file)) {
+            return file($file, FILE_IGNORE_NEW_LINES);
+        }
+
+        return $data = [];
+    }
+
+    public function  writeFile(string $directory, string $file, $data): bool
+    {
+        $path = $directory . '/' . $file;
+        $this->makeDirectory($directory);
+
+        return (bool) file_put_contents($path, $data);
+    }
 
     protected function isFileExists(string $file): bool
     {
@@ -22,23 +38,6 @@ class FileHandler
 
         mkdir($directoryName);
         return true;
-    }
-
-    public function readFile(string $file): array
-    {
-        if ($this->isFileExists($file)) {
-            return file($file, FILE_IGNORE_NEW_LINES);
-        }
-
-        return $data = [];
-    }
-
-    public function  writeFile(string $directory, string $file, $data): bool
-    {
-        $path = $directory . '/' . $file;
-        $this->makeDirectory($directory);
-
-        return (bool) file_put_contents($path, $data);
     }
 
 }
