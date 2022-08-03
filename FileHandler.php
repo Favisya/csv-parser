@@ -19,6 +19,7 @@ class FileHandler
         return (bool) file_put_contents($path, $data);
     }
 
+
     protected function isFileExists(string $file): bool
     {
         if (!file_exists($file)) {
@@ -39,5 +40,4 @@ class FileHandler
         mkdir($directoryName);
         return true;
     }
-
 }

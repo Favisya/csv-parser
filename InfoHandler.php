@@ -19,6 +19,7 @@ class InfoHandler extends FileHandler
         return $outputText;
     }
 
+
     private function getRowsQty($file): int
     {
         return (count(file($file)) - 1);

@@ -2,7 +2,6 @@
 
 class CsvHandler extends FileHandler
 {
-
     public function parse(array $data): array
     {
         $parsedData=[];
@@ -21,11 +20,6 @@ class CsvHandler extends FileHandler
         return $parsedData;
     }
 
-    public function getHeader(array $data): array
-    {
-        return reset($data);
-    }
-
     public function writeFile(string $directory, string $file, $data): bool
     {
         $path = $directory . '/' . $file;
@@ -39,5 +33,4 @@ class CsvHandler extends FileHandler
 
         return true;
     }
-
 }

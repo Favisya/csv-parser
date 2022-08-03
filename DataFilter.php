@@ -2,7 +2,6 @@
 
 class DataFilter extends CsvHandler
 {
-
     public function FilterDataByCountrySplit(array $data, int $splitToWords): array
     {
         $resultData[] = $data[0];
@@ -65,6 +64,7 @@ class DataFilter extends CsvHandler
 
         return ($a['population'] < $b['population']) ? -1 : 1;
     }
+
 
     private function getFormattedPopulation(int $population, int $byNumber, string $separator): string
     {
