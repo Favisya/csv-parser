@@ -11,7 +11,7 @@ class FileHandler
         return $data = [];
     }
 
-    public function  writeFile(string $directory, string $file, $data): bool
+    public function writeFile(string $directory, string $file, $data): bool
     {
         $path = $directory . '/' . $file;
         $this->makeDirectory($directory);

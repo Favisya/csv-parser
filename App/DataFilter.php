@@ -1,8 +1,8 @@
 <?php
 
-class DataFilter extends CsvHandler
+class DataFilter
 {
-    public function FilterDataByCountrySplit(array $data, int $splitToWords): array
+    public function filterDataByCountrySplit(array $data, int $splitToWords): array
     {
         $resultData[] = $data[0];
         foreach ($data as $element) {
@@ -15,7 +15,7 @@ class DataFilter extends CsvHandler
         return $resultData;
     }
 
-    public function FilterDataByCountry(array $data, string $country): array
+    public function filterDataByCountry(array $data, string $country): array
     {
         $resultData = [];
         foreach ($data as $element) {
