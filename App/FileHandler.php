@@ -19,6 +19,15 @@ class FileHandler
         return (bool) file_put_contents($path, $data);
     }
 
+    protected function makeDirectory($directoryName): bool
+    {
+        if (is_dir($directoryName)) {
+            return false;
+        }
+
+        mkdir($directoryName);
+        return true;
+    }
 
     protected function isFileExists(string $file): bool
     {
@@ -28,16 +37,6 @@ class FileHandler
         }
         echo "File $file exists" . PHP_EOL;
 
-        return true;
-    }
-
-    protected function makeDirectory($directoryName): bool
-    {
-        if (is_dir($directoryName)) {
-            return false;
-        }
-
-        mkdir($directoryName);
         return true;
     }
 }
