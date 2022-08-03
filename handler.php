@@ -3,4 +3,4 @@
 
 require_once 'index.php';
 
-parseCsv($argv[1], $argv[2], $argv[3]);
+handler($argv[1], $argv[2], $argv[3]);

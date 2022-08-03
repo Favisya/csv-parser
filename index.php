@@ -4,38 +4,82 @@ require_once 'App/FileHandler.php';
 require_once 'App/CsvHandler.php';
 require_once 'App/DataFilter.php';
 require_once 'App/InfoHandler.php';
+require_once 'App/XlsxHandler.php';
 
-const FIRST_OUTPUT  = 'output_data_1.csv';
-const SECOND_OUTPUT = 'output_data_2.csv';
-const THIRD_OUTPUT  = 'output_data_3.csv';
-const FOURTH_OUTPUT = 'output_data_4.csv';
+const FIRST_OUTPUT  = 'output_data_1';
+const SECOND_OUTPUT = 'output_data_2';
+const THIRD_OUTPUT  = 'output_data_3';
+const FOURTH_OUTPUT = 'output_data_4';
 
-function parseCsv(string $filePointer, string $directory): bool
-{
+function writeType(
+    string $outFileName,
+    string $directory,
+    string $fileFormat,
+    array  $data
+): bool {
     $csvObject    = new CsvHandler();
-    $filterObject = new DataFilter();
-    $data         = $csvObject->readFile($filePointer);
+    $xlsxObject   = new XlsxHandler();
 
-    if ($data == false) {
-       return false;
+    if ($fileFormat === 'csv') {
+        $csvObject->writeFile($directory, $outFileName . '.' . 'csv', $data);
+    } elseif ($fileFormat === 'xlsx') {
+        $xlsxObject->writeFile($directory, $outFileName. '.' . 'xlsx', $data);
+    } else {
+        return false;
     }
 
-    $parsedData = $csvObject->parse($data);
+    return true;
+}
+
+function readType(string $file): array
+{
+    $csvObject    = new CsvHandler();
+    $xlsxObject   = new XlsxHandler();
+    $resultData   = [];
+
+    $explodeFileName = explode('.', $file);
+    if ($explodeFileName[1] === 'csv') {
+        $resultData = $csvObject->parse($csvObject->readFile($file));
+    } elseif ($explodeFileName[1] === 'xlsx') {
+        $resultData = $xlsxObject->readFile($file);
+    }
+
+    return $resultData;
+}
+
+function handler(
+    string $filePointer,
+    string $directory,
+    string $fileFormat = 'csv'
+): bool {
+    $csvObject    = new CsvHandler();
+    $xlsxObject   = new XlsxHandler();
+    $filterObject = new DataFilter();
+
+    $parsedData = readType($filePointer);
+
+    if ((bool) $parsedData == false) {
+       return false;
+    }
+    if ($fileFormat !== 'csv' && $fileFormat !== 'xlsx') {
+        echo'Incorrect file format!' . PHP_EOL;
+        return false;
+    }
 
     $filteredData = $filterObject->filterDataByCountrySplit($parsedData, 1);
-    $csvObject->writeFile($directory, FIRST_OUTPUT, $filteredData);
+    writeType(FIRST_OUTPUT, $directory, $fileFormat, $filteredData);
 
     $filteredData = $filterObject->filterDataByCountry($parsedData, 'Russia');
-    $csvObject->writeFile($directory, SECOND_OUTPUT, $filteredData);
+    writeType(SECOND_OUTPUT, $directory, $fileFormat, $filteredData);
 
     $filteredData = $filterObject->filterDataByLatOrLng($parsedData, 0);
-    $csvObject->writeFile($directory, THIRD_OUTPUT, $filteredData);
+    writeType(THIRD_OUTPUT, $directory, $fileFormat, $filteredData);
 
     $populationField  = ['populationFormatted' => 'population_formatted'];
     $filteredData = $filterObject->getAllDataPopForm($parsedData);
     $filteredData[0] += $populationField;
     unset($filteredData[1]);
-    $csvObject->writeFile($directory, FOURTH_OUTPUT, $filteredData);
+    writeType(FOURTH_OUTPUT, $directory, $fileFormat, $filteredData);
 
     $infoObject = new InfoHandler();
     $data = $infoObject->getInfoAboutFiles($directory, $filePointer);
