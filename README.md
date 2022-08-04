@@ -36,7 +36,7 @@ methods:
 
 
 #### CsvHandler
-extends FileHandler
+extends [FileHandler](#FileHandler)
 
 methods:
 
@@ -46,7 +46,7 @@ methods:
 
 
 #### XlsxHandler
-extends FileHandler
+extends [FileHandler](#FileHandler)
 
 methods:
 
@@ -56,7 +56,7 @@ methods:
 
 
 #### InfoHandler
-extends FileHandler
+extends [FileHandler](#FileHandler)
 Make info about all files 
 
 methods:
@@ -72,8 +72,12 @@ methods:
 - `public function filterDataByCountry(array $data, string $country): array`
 - `public function filterDataByLatOrLng(array $data, int $number): array`
 - `public function getAllDataPopForm(array $data): array`
-- `private function sortByPopulationDesc($a, $b): int`return sorted array for filter by country
-- `private function getFormattedPopulation(int $population, int $byNumber, string $separator): string`return formatted pop
+- `private function sortByPopulationDesc($a, $b): int`
+
+   return sorted array for filter by country
+- `private function getFormattedPopulation(int $population, int $byNumber, string $separator): string`
+
+   return formatted population for getAllByPopulationDesc
 
 
 #### Factory
