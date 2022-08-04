@@ -1,6 +1,6 @@
 <?php
 
-CONST FORMATS = [
+const FORMATS = [
     'xlsx' => 'xlsx',
     'csv'  => 'csv'
 ];

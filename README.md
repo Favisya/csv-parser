@@ -9,8 +9,8 @@ Handler for csv, xlsx file formats
 There is 2 variant:
 Go to the file dir and run
 
-- `php -r "require 'index.php'; handler('5_input_data_2.csv');"`
-- `php -r "require 'index.php'; handler('5_input_data_2.csv', 'output', 'xlsx');"`
+- `php -r "require 'index.php'; runHandler('5_input_data_2.csv');"`
+- `php -r "require 'index.php'; runHandler('5_input_data_2.csv', 'output', 'xlsx');"`
 
 first variant has default output dir "output" and file format "csv".
 

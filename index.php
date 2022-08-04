@@ -11,8 +11,8 @@ require_once 'constants.php';
 
 function runHandler(
     string $filePointer,
-    string $directory  = 'output',
-    string $fileFormat = 'csv'
+    string $directory   = 'output',
+    string $fileFormat  = 'csv'
 ): bool {
     $explodeFileName = explode('.', $filePointer);
     $factory = new Factory();
