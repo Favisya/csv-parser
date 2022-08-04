@@ -10,7 +10,15 @@ class FileHandler
 
         return $data = [];
     }
-
+    /**
+     * Write data to file
+     *
+     * @param string        $directory
+     * @param string        $file
+     * @param array|string  $data
+     *
+     * @return bool
+     */
     public function writeFile(string $directory, string $file, $data): bool
     {
         $path = $directory . '/' . $file;

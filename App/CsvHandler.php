@@ -21,11 +21,11 @@ class CsvHandler extends FileHandler
     }
 
     /**
-     * Write data to file
+     * Write csv data to file
      *
      * @param string $directory
      * @param string $file
-     * @param array|string $data
+     * @param array  $data
      *
      * @return bool
      */
