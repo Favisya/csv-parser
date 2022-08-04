@@ -1,40 +1,21 @@
 <?php
 
-require 'vendor/autoload.php';
-
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
-use PhpOffice\PhpSpreadsheet\Reader\Xlsx as xlsxRead;
+use PhpOffice\PhpSpreadsheet\Reader\Xlsx as XlsxReader;
 
 class XlsxHandler extends FileHandler
 {
     public function readFile(string $file): array
     {
         if (!$this->isFileExists($file)) {
-            return $data = [];
+            return [];
         }
 
-        $reader = new xlsxRead();
+        $reader = new XlsxReader();
         $spreadSheet = $reader->load($file);
 
         return $spreadSheet->getSheet(0)->toArray();
-    }
-
-    public function parse($data): array
-    {
-        $parsedData = [];
-        foreach ($data as $i => $element) {
-            $parsedData[] = [
-                'city'       => $element[0],
-                'lat'        => $element[1],
-                'lng'        => $element[2],
-                'country'    => $element[3],
-                'iso2'       => $element[4],
-                'iso3'       => $element[5],
-                'population' => $element[6]
-            ];
-        }
-        return $parsedData;
     }
 
     /**

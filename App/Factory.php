@@ -5,11 +5,12 @@ class Factory
     public function create($type)
     {
         switch ($type) {
-            case 'xlsx':
+            case FORMATS['xlsx']:
                 return new XlsxHandler();
-            case 'csv':
-            default:
+            case FORMATS['csv']:
                 return new CsvHandler();
+            default:
+                return '';
         }
     }
 }

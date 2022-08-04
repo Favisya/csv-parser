@@ -28,9 +28,12 @@ first variant has default output dir "output" and file format "csv".
 Base class 
 
 methods:
-
+- `public function parse(array $data, string $fileFormat): array`
 - `public function readFile(string $file)`
 - `public function writeFile(string $directory, string $file, $data): bool`
+- `private function parseType($element, string $fileFormat): array`
+
+   Help to choice file format for parser
 - `protected function makeDirectory($directoryName): bool`
 - `protected function isFileExists(string $file): bool`
 
@@ -41,7 +44,6 @@ extends [FileHandler](#FileHandler)
 methods:
 
 - `public function readFile(string $file): array`
-- `public function parse(array $data): array`
 - `public function writeFile(string $directory, string $file, $data): bool`
 
 
@@ -50,8 +52,6 @@ extends [FileHandler](#FileHandler)
 
 methods:
 
-- `public function readFile(string $file): array`
-- `public function parse($data): array`
 - `public function writeFile(string $directory, string $file, $data): bool`
 
 
@@ -62,6 +62,8 @@ Make info about all files
 methods:
 
 - `public function getInfoAboutFiles(string $directory, string $fileFormat, array $counters): string`
+
+  return info about all output files 
 
 #### DataFilter
 Filter data by arguments 

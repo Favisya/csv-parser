@@ -2,14 +2,33 @@
 
 class FileHandler
 {
+    public function parse(array $data, string $fileFormat): array
+    {
+        $parsedData = [];
+        foreach ($data as $element) {
+            $res = $this->parseType($element, $fileFormat);
+            $parsedData[] = [
+                'city'       => $res[0],
+                'lat'        => $res[1],
+                'lng'        => $res[2],
+                'country'    => $res[3],
+                'iso2'       => $res[4],
+                'iso3'       => $res[5],
+                'population' => $res[6]
+            ];
+        }
+        return $parsedData;
+    }
+
     public function readFile(string $file): array
     {
         if ($this->isFileExists($file)) {
             return file($file, FILE_IGNORE_NEW_LINES);
         }
 
-        return $data = [];
+        return [];
     }
+
     /**
      * Write data to file
      *
@@ -26,6 +45,27 @@ class FileHandler
 
         return (bool) file_put_contents($path, $data);
     }
+
+    /**
+     * Help to choice file format for parser
+     *
+     * @param $element
+     * @param string $fileFormat
+     *
+     * @return array
+     */
+    private function parseType($element, string $fileFormat): array
+    {
+        switch ($fileFormat) {
+            case FORMATS['xlsx']:
+                return $element;
+            case FORMATS['csv']:
+                return str_getcsv($element);
+            default:
+                return [];
+        }
+    }
+
 
     protected function makeDirectory($directoryName): bool
     {

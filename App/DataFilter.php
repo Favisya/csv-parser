@@ -43,6 +43,8 @@ class DataFilter
 
     public function getAllDataPopForm(array $data): array
     {
+        $populationField  = ['populationFormatted' => 'population_formatted'];
+        $data[0] += $populationField;
         $resultData[] = $data[0];
 
         foreach ($data as $element) {

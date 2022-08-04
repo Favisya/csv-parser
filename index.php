@@ -1,87 +1,62 @@
 <?php
 
+require_once 'vendor/autoload.php';
 require_once 'App/FileHandler.php';
 require_once 'App/CsvHandler.php';
 require_once 'App/DataFilter.php';
 require_once 'App/InfoHandler.php';
 require_once 'App/XlsxHandler.php';
 require_once 'App/Factory.php';
+require_once 'constants.php';
 
-const FIRST_OUTPUT  = 'output_data_1';
-const SECOND_OUTPUT = 'output_data_2';
-const THIRD_OUTPUT  = 'output_data_3';
-const FOURTH_OUTPUT = 'output_data_4';
-
-function writeType(
-    string $outFileName,
-    string $directory,
-    string $fileFormat,
-    array  $data
-): bool {
-    $file = $outFileName . '.' . $fileFormat;
-
-    $factory = new Factory();
-    $factory
-        ->create($fileFormat)
-        ->writeFile($directory, $file, $data);
-
-    return true;
-}
-
-function readType(string $file): array
-{
-    $explodeFileName = explode('.', $file);
-
-    $factory = new Factory();
-    $object = $factory->create($explodeFileName[1]);
-
-    return $object->parse($object->readFile($file));
-}
-
-function handler(
+function runHandler(
     string $filePointer,
     string $directory  = 'output',
     string $fileFormat = 'csv'
 ): bool {
-    if ($fileFormat !== 'csv' && $fileFormat !== 'xlsx') {
-        echo'Incorrect file format!' . PHP_EOL;
+    $explodeFileName = explode('.', $filePointer);
+    $factory = new Factory();
+
+    if (!$factory->create($explodeFileName[1])) {
+        echo 'Incorrect file format!' . PHP_EOL;
         return false;
     }
 
-    $counters = [0,0,0,0,0];
+    $counters = [];
 
-    $parsedData = readType($filePointer);
-    if ((bool) $parsedData == false) {
+    $object = $factory->create($explodeFileName[1]);
+    $parsedData = $object->parse($object->readFile($filePointer), $explodeFileName[1]);
+
+    if ($parsedData == false) {
         return false;
     }
-    $counters[4] = count($parsedData);
 
     $filterObject = new DataFilter();
+    $factoryObject = $factory->create($fileFormat);
 
     $filteredData = $filterObject->filterDataByCountrySplit($parsedData, 1);
-    $counters[0] = count($filteredData);
-    writeType(FIRST_OUTPUT, $directory, $fileFormat, $filteredData);
+    $counters[] = count($filteredData) - 1;
+    $factoryObject->writeFile($directory, FIRST_OUTPUT . '.' . $fileFormat, $filteredData);
 
     $filteredData = $filterObject->filterDataByCountry($parsedData, 'Russia');
-    $counters[1] = count($filteredData);
-    writeType(SECOND_OUTPUT, $directory, $fileFormat, $filteredData);
+    $counters[] = count($filteredData) - 1;
+    $factoryObject->writeFile($directory, SECOND_OUTPUT . '.' . $fileFormat, $filteredData);
 
     $filteredData = $filterObject->filterDataByLatOrLng($parsedData, 0);
-    $counters[2] = count($filteredData);
-    writeType(THIRD_OUTPUT, $directory, $fileFormat, $filteredData);
+    $counters[] = count($filteredData) - 1;
+    $factoryObject->writeFile($directory, THIRD_OUTPUT . '.' . $fileFormat, $filteredData);
 
-    $populationField  = ['populationFormatted' => 'population_formatted'];
     $filteredData = $filterObject->getAllDataPopForm($parsedData);
-    $filteredData[0] += $populationField;
     unset($filteredData[1]);
-    $counters[3] = count($filteredData);
-    writeType(FOURTH_OUTPUT, $directory, $fileFormat, $filteredData);
+    $counters[] = count($filteredData) - 1;
+    $factoryObject->writeFile($directory, FOURTH_OUTPUT . '.' . $fileFormat, $filteredData);
+
+    $counters[] = count($parsedData) - 1;
 
     $infoObject = new InfoHandler();
     $data = $infoObject->getInfoAboutFiles($directory, $fileFormat, $counters);
     $infoObject->writeFile($directory, 'infoAboutFiles.txt', $data);
 
     echo 'Ready!' . PHP_EOL;
-
     return true;
 }
