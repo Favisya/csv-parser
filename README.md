@@ -83,7 +83,7 @@ methods:
 
 
 #### Factory
-Return object(CsvHandler || XlsxHandler)
+Return object([CsvHandler](#CsvHandler) || [XlsxHandler](#XlsxHandler))
 
 methods:
 
