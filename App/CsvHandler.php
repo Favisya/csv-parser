@@ -4,7 +4,7 @@ class CsvHandler extends FileHandler
 {
     public function parse(array $data): array
     {
-        $parsedData=[];
+        $parsedData = [];
         foreach ($data as $i => $element) {
             $res = str_getcsv($element);
             $parsedData[] = [

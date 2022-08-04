@@ -76,7 +76,7 @@ class DataFilter
                 $remainder = ($population / $byNumber) % $byNumber;
             }
 
-            if ($remainder !== 0 ) {
+            if ($remainder !== 0) {
                 $populationFormatted = $remainder . "$separator ";
             }
         }

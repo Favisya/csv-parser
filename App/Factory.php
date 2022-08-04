@@ -7,7 +7,7 @@ class Factory
         switch ($type) {
             case 'xlsx':
                 return new XlsxHandler();
-            case'csv':
+            case 'csv':
             default:
                 return new CsvHandler();
         }

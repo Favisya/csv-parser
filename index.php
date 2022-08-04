@@ -52,7 +52,7 @@ function handler(
 
     $parsedData = readType($filePointer);
     if ((bool) $parsedData == false) {
-       return false;
+        return false;
     }
     $counters[4] = count($parsedData);
 
