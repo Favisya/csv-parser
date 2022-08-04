@@ -5,6 +5,7 @@ require_once 'App/CsvHandler.php';
 require_once 'App/DataFilter.php';
 require_once 'App/InfoHandler.php';
 require_once 'App/XlsxHandler.php';
+require_once 'App/Factory.php';
 
 const FIRST_OUTPUT  = 'output_data_1';
 const SECOND_OUTPUT = 'output_data_2';
@@ -17,39 +18,29 @@ function writeType(
     string $fileFormat,
     array  $data
 ): bool {
-    $csvObject    = new CsvHandler();
-    $xlsxObject   = new XlsxHandler();
+    $file = $outFileName . '.' . $fileFormat;
 
-    if ($fileFormat === 'csv') {
-        $csvObject->writeFile($directory, $outFileName . '.' . 'csv', $data);
-    } elseif ($fileFormat === 'xlsx') {
-        $xlsxObject->writeFile($directory, $outFileName. '.' . 'xlsx', $data);
-    } else {
-        return false;
-    }
+    $factory = new Factory();
+    $factory
+        ->create($fileFormat)
+        ->writeFile($directory, $file, $data);
 
     return true;
 }
 
 function readType(string $file): array
 {
-    $csvObject    = new CsvHandler();
-    $xlsxObject   = new XlsxHandler();
-    $resultData   = [];
-
     $explodeFileName = explode('.', $file);
-    if ($explodeFileName[1] === 'csv') {
-        $resultData = $csvObject->parse($csvObject->readFile($file));
-    } elseif ($explodeFileName[1] === 'xlsx') {
-        $resultData = $xlsxObject->readFile($file);
-    }
 
-    return $resultData;
+    $factory = new Factory();
+    $object = $factory->create($explodeFileName[1]);
+
+    return $object->parse($object->readFile($file));
 }
 
 function handler(
     string $filePointer,
-    string $directory,
+    string $directory  = 'output',
     string $fileFormat = 'csv'
 ): bool {
     if ($fileFormat !== 'csv' && $fileFormat !== 'xlsx') {
@@ -57,15 +48,12 @@ function handler(
         return false;
     }
 
-    $csvObject    = new CsvHandler();
-    $xlsxObject   = new XlsxHandler();
-    $filterObject = new DataFilter();
-
     $parsedData = readType($filePointer);
-
     if ((bool) $parsedData == false) {
        return false;
     }
+
+    $filterObject = new DataFilter();
 
     $filteredData = $filterObject->filterDataByCountrySplit($parsedData, 1);
     writeType(FIRST_OUTPUT, $directory, $fileFormat, $filteredData);

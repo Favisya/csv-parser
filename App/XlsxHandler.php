@@ -17,9 +17,14 @@ class XlsxHandler extends FileHandler
         $reader = new xlsxRead();
         $spreadSheet = $reader->load($file);
 
-        $data = [];
-        foreach ($spreadSheet->getSheet(0)->toArray() as $i => $element) {
-            $data[] = [
+        return $spreadSheet->getSheet(0)->toArray();
+    }
+
+    public function parse($data): array
+    {
+        $parsedData = [];
+        foreach ($data as $i => $element) {
+            $parsedData[] = [
                 'city'       => $element[0],
                 'lat'        => $element[1],
                 'lng'        => $element[2],
@@ -29,10 +34,19 @@ class XlsxHandler extends FileHandler
                 'population' => $element[6]
             ];
         }
-
-        return $data;
+        return $parsedData;
     }
 
+    /**
+     * Write xlsx data to file
+     *
+     * @param string $directory
+     * @param string $file
+     * @param array  $data
+     *
+     * @return bool
+     * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
+     */
     public function writeFile(string $directory, string $file, $data): bool
     {
         $this->makeDirectory($directory);
