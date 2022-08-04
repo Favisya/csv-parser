@@ -48,30 +48,37 @@ function handler(
         return false;
     }
 
+    $counters = [0,0,0,0,0];
+
     $parsedData = readType($filePointer);
     if ((bool) $parsedData == false) {
        return false;
     }
+    $counters[4] = count($parsedData);
 
     $filterObject = new DataFilter();
 
     $filteredData = $filterObject->filterDataByCountrySplit($parsedData, 1);
+    $counters[0] = count($filteredData);
     writeType(FIRST_OUTPUT, $directory, $fileFormat, $filteredData);
 
     $filteredData = $filterObject->filterDataByCountry($parsedData, 'Russia');
+    $counters[1] = count($filteredData);
     writeType(SECOND_OUTPUT, $directory, $fileFormat, $filteredData);
 
     $filteredData = $filterObject->filterDataByLatOrLng($parsedData, 0);
+    $counters[2] = count($filteredData);
     writeType(THIRD_OUTPUT, $directory, $fileFormat, $filteredData);
 
     $populationField  = ['populationFormatted' => 'population_formatted'];
     $filteredData = $filterObject->getAllDataPopForm($parsedData);
     $filteredData[0] += $populationField;
     unset($filteredData[1]);
+    $counters[3] = count($filteredData);
     writeType(FOURTH_OUTPUT, $directory, $fileFormat, $filteredData);
 
     $infoObject = new InfoHandler();
-    $data = $infoObject->getInfoAboutFiles($directory, $filePointer);
+    $data = $infoObject->getInfoAboutFiles($directory, $fileFormat, $counters);
     $infoObject->writeFile($directory, 'infoAboutFiles.txt', $data);
 
     echo 'Ready!' . PHP_EOL;
