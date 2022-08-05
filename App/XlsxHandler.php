@@ -28,7 +28,7 @@ class XlsxHandler extends FileHandler
      * @return bool
      * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
      */
-    public function writeFile(string $directory, string $file, $data): bool
+    public function writeFile(string $directory, string $file,array $data): bool
     {
         $this->makeDirectory($directory);
 

@@ -46,12 +46,12 @@ class FileHandler
      *
      * @return bool
      */
-    public function writeFile(string $directory, string $file, $data): bool
+    public function writeFile(string $directory, string $file, array $data): bool
     {
         $path = $directory . '/' . $file;
         $this->makeDirectory($directory);
 
-        return (bool) file_put_contents($path, $data);
+        return file_put_contents($path, $data);
     }
 
 
