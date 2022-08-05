@@ -1,6 +1,6 @@
 <?php
 
-class Factory
+class FileHandlerFactory
 {
     public function create($type)
     {
