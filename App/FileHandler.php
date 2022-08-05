@@ -2,28 +2,27 @@
 
 class FileHandler
 {
-    const KEYS = [
-        'city',
-        'lat',
-        'lng',
-        'country',
-        'iso2',
-        'iso3',
-        'population'
-    ];
+    const COLUMN_CITY       = 'city';
+    const COLUMN_LAT        = 'lat';
+    const COLUMN_LNG        = 'lng';
+    const COLUMN_COUNTRY    = 'country';
+    const COLUMN_ISO2       = 'iso2';
+    const COLUMN_ISO3       = 'iso3';
+    const COLUMN_POPULATION = 'population';
 
     public function parse(array $data): array
     {
         $parsedData = [];
         foreach ($data as $element) {
+            $element = $this->parseRow($element);
             $parsedData[] = [
-                self::KEYS[0] => $element[0],
-                self::KEYS[1] => $element[1],
-                self::KEYS[2] => $element[2],
-                self::KEYS[3] => $element[3],
-                self::KEYS[4] => $element[4],
-                self::KEYS[5] => $element[5],
-                self::KEYS[6] => $element[6]
+                self::COLUMN_CITY       => $element[0],
+                self::COLUMN_LAT        => $element[1],
+                self::COLUMN_LNG        => $element[2],
+                self::COLUMN_COUNTRY    => $element[3],
+                self::COLUMN_ISO2       => $element[4],
+                self::COLUMN_ISO3       => $element[5],
+                self::COLUMN_POPULATION => $element[6]
             ];
         }
         return $parsedData;
@@ -55,28 +54,13 @@ class FileHandler
         return (bool) file_put_contents($path, $data);
     }
 
-    /**
-     * Help to choice file format for parser
-     *
-     * @param $element
-     * @param string $fileFormat
-     *
-     * @return array
-     */
-    private function parseType($element, string $fileFormat): array
+
+    protected function parseRow($element): array
     {
-        switch ($fileFormat) {
-            case FORMATS['xlsx']:
-                return $element;
-            case FORMATS['csv']:
-                return str_getcsv($element);
-            default:
-                return [];
-        }
+        return $element;
     }
 
-
-    protected function makeDirectory($directoryName): bool
+    protected function makeDirectory(string $directoryName): bool
     {
         if (is_dir($directoryName)) {
             return false;
