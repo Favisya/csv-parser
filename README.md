@@ -28,7 +28,7 @@ first variant has default output dir "output" and file format "csv".
 Base class 
 
 methods:
-- `public function parse(array $data, string $fileFormat): array`
+- `public function parse(array $data): array`
 - `public function readFile(string $file)`
 - `public function writeFile(string $directory, string $file, $data): bool`
 - `private function parseType($element, string $fileFormat): array`
@@ -43,6 +43,7 @@ extends [FileHandler](#FileHandler)
 
 methods:
 
+- `public function parse(array $data): array`
 - `public function readFile(string $file): array`
 - `public function writeFile(string $directory, string $file, $data): bool`
 
