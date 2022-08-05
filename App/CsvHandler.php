@@ -2,7 +2,6 @@
 
 class CsvHandler extends FileHandler
 {
-
     public function parseRow($element): array
     {
         return str_getcsv($element);
