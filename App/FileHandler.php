@@ -2,19 +2,28 @@
 
 class FileHandler
 {
-    public function parse(array $data, string $fileFormat): array
+    const KEYS = [
+        'city',
+        'lat',
+        'lng',
+        'country',
+        'iso2',
+        'iso3',
+        'population'
+    ];
+
+    public function parse(array $data): array
     {
         $parsedData = [];
         foreach ($data as $element) {
-            $res = $this->parseType($element, $fileFormat);
             $parsedData[] = [
-                'city'       => $res[0],
-                'lat'        => $res[1],
-                'lng'        => $res[2],
-                'country'    => $res[3],
-                'iso2'       => $res[4],
-                'iso3'       => $res[5],
-                'population' => $res[6]
+                self::KEYS[0] => $element[0],
+                self::KEYS[1] => $element[1],
+                self::KEYS[2] => $element[2],
+                self::KEYS[3] => $element[3],
+                self::KEYS[4] => $element[4],
+                self::KEYS[5] => $element[5],
+                self::KEYS[6] => $element[6]
             ];
         }
         return $parsedData;
