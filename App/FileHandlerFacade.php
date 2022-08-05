@@ -4,12 +4,13 @@ class FileHandlerFacade
 {
     protected $fileHandlerFactory;
     protected $adapter;
+    protected $dataFilter;
     protected $infoObject;
 
     public function __construct()
     {
         $this->infoObject         = new InfoHandler();
-        $this->adapter            = new Adapter(new DataFilter());
+        $this->dataFilter         = new DataFilter();
         $this->fileHandlerFactory = new FileHandlerFactory();
     }
 
@@ -18,6 +19,7 @@ class FileHandlerFacade
         string $directory   = 'output',
         string $fileFormat  = 'csv'
     ): void {
+
         $explodeFileName = explode('.', $filePointer);
 
         if (!$this->fileHandlerFactory->create($explodeFileName[1])) { //ask about it Vlad
@@ -37,7 +39,6 @@ class FileHandlerFacade
         $this->fileHandlerFactoryObject = $this->fileHandlerFactory->create($fileFormat);
 
         $filteredData = $this
-            ->adapter
             ->dataFilter
             ->filterDataByCountrySplit($parsedData, 1);
         $counters[] = count($filteredData) - 1;
@@ -47,7 +48,6 @@ class FileHandlerFacade
             ->writeFile($directory, FIRST_OUTPUT . '.' . $fileFormat, $filteredData);
 
         $filteredData = $this
-            ->adapter
             ->dataFilter
             ->filterDataByCountry($parsedData, 'Russia');
         $counters[] = count($filteredData) - 1;
@@ -57,7 +57,6 @@ class FileHandlerFacade
             ->writeFile($directory, SECOND_OUTPUT . '.' . $fileFormat, $filteredData);
 
         $filteredData = $this
-            ->adapter
             ->dataFilter
             ->filterDataByLatOrLng($parsedData, 0);
         $counters[] = count($filteredData) - 1;
@@ -67,24 +66,25 @@ class FileHandlerFacade
             ->writeFile($directory, THIRD_OUTPUT . '.' . $fileFormat, $filteredData);
 
         $filteredData = $this
-            ->adapter
             ->dataFilter
             ->getAllDataPopForm($parsedData);
         unset($filteredData[1]);
         $counters[] = count($filteredData) - 1;
+
         $this
             ->fileHandlerFactoryObject
             ->writeFile($directory, FOURTH_OUTPUT . '.' . $fileFormat, $filteredData);
-
         $counters[] = count($parsedData) - 1;
 
+        $this->adapter = new Adapter(new InfoHandler(), $directory, $fileFormat);
+
         $data = $this
-            ->infoObject
-            ->getInfoAboutFiles($directory, $fileFormat, $counters);
+            ->adapter
+            ->parse($counters);
 
         $this
-            ->infoObject
-            ->writeFile($directory, 'infoAboutFiles.txt', $data);
+            ->adapter
+            ->writeFile($directory, 'infoAboutFiles.txt', $data, FILE_APPEND);
 
         echo 'Ready!' . PHP_EOL;
     }
