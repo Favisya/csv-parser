@@ -2,3 +2,6 @@
 5_input_data_2.csv
 /output/*
 NAN
+composer.json
+composer.lock
+vendor/
