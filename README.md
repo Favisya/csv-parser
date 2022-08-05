@@ -31,7 +31,6 @@ methods:
 - `public function parse(array $data): array`
 - `public function readFile(string $file)`
 - `public function writeFile(string $directory, string $file, $data): bool`
-- `private function parseType($element, string $fileFormat): array`
 
    Help to choice file format for parser
 - `protected function makeDirectory($directoryName): bool`
