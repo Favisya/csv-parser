@@ -1,47 +1,62 @@
 <?php
 
+require_once 'vendor/autoload.php';
 require_once 'App/FileHandler.php';
 require_once 'App/CsvHandler.php';
 require_once 'App/DataFilter.php';
 require_once 'App/InfoHandler.php';
+require_once 'App/XlsxHandler.php';
+require_once 'App/Factory.php';
+require_once 'constants.php';
 
-const FIRST_OUTPUT  = 'output_data_1.csv';
-const SECOND_OUTPUT = 'output_data_2.csv';
-const THIRD_OUTPUT  = 'output_data_3.csv';
-const FOURTH_OUTPUT = 'output_data_4.csv';
+function runHandler(
+    string $filePointer,
+    string $directory   = 'output',
+    string $fileFormat  = 'csv'
+): bool {
+    $explodeFileName = explode('.', $filePointer);
+    $factory = new Factory();
 
-function parseCsv(string $filePointer, string $directory): bool
-{
-    $csvObject    = new CsvHandler();
-    $filterObject = new DataFilter();
-    $data         = $csvObject->readFile($filePointer);
-
-    if ($data == false) {
-       return false;
+    if (!$factory->create($explodeFileName[1])) {
+        echo 'Incorrect file format!' . PHP_EOL;
+        return false;
     }
 
-    $parsedData = $csvObject->parse($data);
+    $counters = [];
+
+    $object = $factory->create($explodeFileName[1]);
+    $parsedData = $object->parse($object->readFile($filePointer), $explodeFileName[1]);
+
+    if ($parsedData == false) {
+        return false;
+    }
+
+    $filterObject = new DataFilter();
+    $factoryObject = $factory->create($fileFormat);
 
     $filteredData = $filterObject->filterDataByCountrySplit($parsedData, 1);
-    $csvObject->writeFile($directory, FIRST_OUTPUT, $filteredData);
+    $counters[] = count($filteredData) - 1;
+    $factoryObject->writeFile($directory, FIRST_OUTPUT . '.' . $fileFormat, $filteredData);
 
     $filteredData = $filterObject->filterDataByCountry($parsedData, 'Russia');
-    $csvObject->writeFile($directory, SECOND_OUTPUT, $filteredData);
+    $counters[] = count($filteredData) - 1;
+    $factoryObject->writeFile($directory, SECOND_OUTPUT . '.' . $fileFormat, $filteredData);
 
     $filteredData = $filterObject->filterDataByLatOrLng($parsedData, 0);
-    $csvObject->writeFile($directory, THIRD_OUTPUT, $filteredData);
+    $counters[] = count($filteredData) - 1;
+    $factoryObject->writeFile($directory, THIRD_OUTPUT . '.' . $fileFormat, $filteredData);
 
-    $populationField  = ['populationFormatted' => 'population_formatted'];
     $filteredData = $filterObject->getAllDataPopForm($parsedData);
-    $filteredData[0] += $populationField;
     unset($filteredData[1]);
-    $csvObject->writeFile($directory, FOURTH_OUTPUT, $filteredData);
+    $counters[] = count($filteredData) - 1;
+    $factoryObject->writeFile($directory, FOURTH_OUTPUT . '.' . $fileFormat, $filteredData);
+
+    $counters[] = count($parsedData) - 1;
 
     $infoObject = new InfoHandler();
-    $data = $infoObject->getInfoAboutFiles($directory, $filePointer);
+    $data = $infoObject->getInfoAboutFiles($directory, $fileFormat, $counters);
     $infoObject->writeFile($directory, 'infoAboutFiles.txt', $data);
 
     echo 'Ready!' . PHP_EOL;
-
     return true;
 }

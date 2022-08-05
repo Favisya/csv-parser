@@ -1,7 +1,6 @@
 .idea
 5_input_data_2.csv
+5_input_data_2.xlsx
 /output/*
 NAN
-composer.json
-composer.lock
 vendor/

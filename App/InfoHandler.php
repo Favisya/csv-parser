@@ -2,26 +2,24 @@
 
 class InfoHandler extends FileHandler
 {
-    public function getInfoAboutFiles(string $directory, string $filePointer): string
+    public function getInfoAboutFiles(string $directory, string $fileFormat, array $counters): string
     {
-        $files =[];
-        foreach (glob($directory . '/' . "*.*") as $filename) {
+        $inputCount = $counters[count($counters) - 1];
+        $files = [];
+        foreach (glob($directory . '/' . "*.$fileFormat") as $i => $filename) {
             $filename = explode('/', $filename);
-            $files[] = $filename[1];
+            $files[] = [
+                'file'  => $filename[1],
+                'count' => $counters[$i]
+            ];
         }
 
-        $outputText = 'input rows: '. $this->getRowsQty($filePointer) . PHP_EOL;
+        $outputText = 'input rows: ' . $inputCount . PHP_EOL;
         $outputText .= 'OUTPUT' . PHP_EOL ;
-        foreach ($files as $filename) {
-            $outputText .= $filename . ' rows: ' . (count(file($directory . '/' . $filename)) - 1) . PHP_EOL;
+        foreach ($files as $file) {
+            $outputText .= $file['file'] . ' rows: ' . $file['count'] . PHP_EOL;
         }
 
         return $outputText;
-    }
-
-
-    private function getRowsQty($file): int
-    {
-        return (count(file($file)) - 1);
     }
 }

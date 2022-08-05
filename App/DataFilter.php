@@ -43,6 +43,8 @@ class DataFilter
 
     public function getAllDataPopForm(array $data): array
     {
+        $populationField  = ['populationFormatted' => 'population_formatted'];
+        $data[0] += $populationField;
         $resultData[] = $data[0];
 
         foreach ($data as $element) {
@@ -76,7 +78,7 @@ class DataFilter
                 $remainder = ($population / $byNumber) % $byNumber;
             }
 
-            if ($remainder !== 0 ) {
+            if ($remainder !== 0) {
                 $populationFormatted = $remainder . "$separator ";
             }
         }
