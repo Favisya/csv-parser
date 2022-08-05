@@ -20,7 +20,7 @@ first variant has default output dir "output" and file format "csv".
 - Make dir App and mv all classes to this dir 
 - check code with codesniffer and resolve problems
 - read some materials about composer
-- add lib [PhpSpreadsheet](https://github.com/PHPOffice/PhpSpreadsheet) adn continue develop (add xlsx export)
+- add lib [PhpSpreadsheet](https://github.com/PHPOffice/PhpSpreadsheet) and continue develop (add xlsx export)
 - Write normal README
 
 ### Classes
@@ -31,8 +31,6 @@ methods:
 - `public function parse(array $data): array`
 - `public function readFile(string $file)`
 - `public function writeFile(string $directory, string $file, $data): bool`
-
-   Help to choice file format for parser
 - `protected function makeDirectory($directoryName): bool`
 - `protected function isFileExists(string $file): bool`
 
@@ -42,7 +40,6 @@ extends [FileHandler](#FileHandler)
 
 methods:
 
-- `public function parse(array $data): array`
 - `public function readFile(string $file): array`
 - `public function writeFile(string $directory, string $file, $data): bool`
 
@@ -52,6 +49,7 @@ extends [FileHandler](#FileHandler)
 
 methods:
 
+- `public function readFile(string $file): array`
 - `public function writeFile(string $directory, string $file, $data): bool`
 
 
