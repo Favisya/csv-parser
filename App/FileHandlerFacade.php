@@ -69,12 +69,12 @@ class FileHandlerFacade
             echo $e->getMessage();
         }
 
-        $this->infoAdapter = new InfoAdapterInterface(new InfoHandler(), $directory, $fileFormat);
+        $this->infoAdapter = new InfoAdapter(new InfoHandler(), $directory, $fileFormat);
         $data = $this->infoAdapter->parse($infoCounters);
         $this->fileHandler->writeFile($directory, 'infoAboutFiles.txt', $data);
 
         $data = $this->fileHandler->readFile('5_input_data_2.txt');
-        $this->txtAdapter = new TxtAdapterInterface(new TxtHAndler(), $fileFormat);
+        $this->txtAdapter = new TxtAdapter(new TxtHAndler(), $fileFormat);
         $txtData = $this->txtAdapter->parse($data);
 
         $filteredData = $this->dataFilter->filterDataByCountry($txtData, 'Russia');

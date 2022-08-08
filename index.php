@@ -12,8 +12,8 @@ require_once 'App/XlsxHandler.php';
 require_once 'App/FileHandlerFactory.php';
 require_once 'App/FileHandlerFacade.php';
 require_once 'App/FileFormatAdapterInterface.php';
-require_once 'App/InfoAdapterInterface.php';
-require_once 'App/TxtAdapterInterface.php';
+require_once 'App/InfoAdapter.php';
+require_once 'App/TxtAdapter.php';
 require_once 'App/TxtHandler.php';
 require_once 'constants.php';
 

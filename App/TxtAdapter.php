@@ -1,6 +1,6 @@
 <?php
 
-class TxtAdapterInterface implements FileFormatAdapterInterface
+class TxtAdapter implements FileFormatAdapterInterface
 {
     private $txtHandler;
     private $fileFormat;
