@@ -4,7 +4,7 @@ class FileHandlerFacade
 {
     private static $instance;
 
-    public static function getInstance()
+    public static function getInstance(): self
     {
         if (empty(self::$instance)) {
             self::$instance = new FileHandlerFacade();
