@@ -11,7 +11,6 @@ require_once 'App/InfoHandler.php';
 require_once 'App/XlsxHandler.php';
 require_once 'App/FileHandlerFactory.php';
 require_once 'App/FileHandlerFacade.php';
-require_once 'App/Singleton.php';
 require_once 'App/FileFormatAdapter.php';
 require_once 'App/InfoAdapter.php';
 require_once 'constants.php';
@@ -21,7 +20,7 @@ function runHandler(
     string $directory   = 'output',
     string $fileFormat  = 'csv'
 ): void {
-    $app = Singleton::getInstance();
+    $app = FileHandlerFacade::getInstance();
     $app->runFileHandler($filePointer, $directory, $fileFormat);
 }
 
