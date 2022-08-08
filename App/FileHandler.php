@@ -70,7 +70,6 @@ class FileHandler
         if (!file_exists($file)) {
             throw new FileHandlerExceptions("input file does not exists");
         }
-        echo "File $file exists" . PHP_EOL;
 
         return true;
     }

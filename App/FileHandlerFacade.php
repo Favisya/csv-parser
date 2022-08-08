@@ -119,6 +119,5 @@ class FileHandlerFacade
             ->parse($counters);
 
         $this->fileHandler->writeFile($directory, 'infoAboutFiles.txt', $data);
-        echo 'Ready!' . PHP_EOL;
     }
 }
