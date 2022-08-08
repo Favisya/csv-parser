@@ -1,6 +1,6 @@
 <?php
 
-class Adapter extends FileHandler
+class InfoAdapter implements FileFormatAdapter
 {
     private $infoHandler;
     private $directory;

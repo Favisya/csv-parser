@@ -3,89 +3,122 @@
 class FileHandlerFacade
 {
     protected $fileHandlerFactory;
-    protected $adapter;
+    protected $fileHandler;
+    protected $handlerObject;
+    protected $infoAdapter;
     protected $dataFilter;
-    protected $infoObject;
 
     public function __construct()
     {
-        $this->infoObject         = new InfoHandler();
+        $this->fileHandler        = new FileHandler();
         $this->dataFilter         = new DataFilter();
         $this->fileHandlerFactory = new FileHandlerFactory();
     }
 
     public function runFileHandler(
         string $filePointer,
-        string $directory   = 'output',
-        string $fileFormat  = 'csv'
+        string $directory = 'output',
+        string $fileFormat = 'csv'
     ): void {
-
         $explodeFileName = explode('.', $filePointer);
 
-        if (!$this->fileHandlerFactory->create($explodeFileName[1])) { //ask about it Vlad
-            echo 'Incorrect file format!' . PHP_EOL;                   //change
-            //return false;
+        try {
+            $this->handlerObject = $this->fileHandlerFactory->create($explodeFileName[1]);
+        } catch (FileHandlerExceptions $e) {
+            echo 'Error:' . $e->getMessage() . PHP_EOL;
         }
 
-        $counters = [];
-
-        $object = $this->fileHandlerFactory->create($explodeFileName[1]);
-        $parsedData = $object->parse($object->readFile($filePointer), $explodeFileName[1]);
-
-        if ($parsedData == false) {
-           // return false;
+        try {
+            $parsedData = $this
+                ->handlerObject
+                ->parse($this
+                    ->handlerObject
+                    ->readFile($filePointer));
+        } catch (FileHandlerExceptions $e) {
+            echo 'Error:' . $e->getMessage() . PHP_EOL;
         }
 
-        $this->fileHandlerFactoryObject = $this->fileHandlerFactory->create($fileFormat);
+        try {
+            $this->handlerObject = $this->fileHandlerFactory->create($fileFormat);
+            $counters = [];
+        } catch (FileHandlerExceptions $e) {
+            echo 'Error:' . $e->getMessage() . PHP_EOL;
+        }
 
-        $filteredData = $this
-            ->dataFilter
-            ->filterDataByCountrySplit($parsedData, 1);
-        $counters[] = count($filteredData) - 1;
+        try {
+            $filteredData = $this
+                ->dataFilter
+                ->filterDataByCountrySplit($parsedData, 1);
+            $counters[] = count($filteredData) - 1;
 
-        $this
-            ->fileHandlerFactoryObject
-            ->writeFile($directory, FIRST_OUTPUT . '.' . $fileFormat, $filteredData);
+            $this
+                ->handlerObject
+                ->writeFile($directory, FIRST_OUTPUT . '.' . $fileFormat, $filteredData);
+        } catch (DataExceptions $e) {
+            echo 'Filter error: ' . $e->getMessage() . PHP_EOL;
+        }
 
-        $filteredData = $this
-            ->dataFilter
-            ->filterDataByCountry($parsedData, 'Russia');
-        $counters[] = count($filteredData) - 1;
+        try {
+            $filteredData = $this
+                ->dataFilter
+                ->filterDataByCountrySplit($parsedData, 1);
+            $counters[] = count($filteredData) - 1;
 
-        $this
-            ->fileHandlerFactoryObject
-            ->writeFile($directory, SECOND_OUTPUT . '.' . $fileFormat, $filteredData);
+            $this
+                ->handlerObject
+                ->writeFile($directory, FIRST_OUTPUT . '.' . $fileFormat, $filteredData);
+        } catch (DataExceptions $e) {
+            echo 'Filter error: ' . $e->getMessage() . PHP_EOL;
+        }
 
-        $filteredData = $this
-            ->dataFilter
-            ->filterDataByLatOrLng($parsedData, 0);
-        $counters[] = count($filteredData) - 1;
+        try {
+            $filteredData = $this
+                ->dataFilter
+                ->filterDataByCountry($parsedData, 'Russia');
+            $counters[] = count($filteredData) - 1;
 
-        $this
-            ->fileHandlerFactoryObject
-            ->writeFile($directory, THIRD_OUTPUT . '.' . $fileFormat, $filteredData);
+            $this
+                ->handlerObject
+                ->writeFile($directory, SECOND_OUTPUT . '.' . $fileFormat, $filteredData);
+        } catch (DataExceptions $e) {
+            echo 'Filter error: ' . $e->getMessage() . PHP_EOL;
+        }
 
-        $filteredData = $this
-            ->dataFilter
-            ->getAllDataPopForm($parsedData);
-        unset($filteredData[1]);
-        $counters[] = count($filteredData) - 1;
+        try {
+            $filteredData = $this
+                ->dataFilter
+                ->filterDataByLatOrLng($parsedData, 0);
+            $counters[] = count($filteredData) - 1;
 
-        $this
-            ->fileHandlerFactoryObject
-            ->writeFile($directory, FOURTH_OUTPUT . '.' . $fileFormat, $filteredData);
+            $this
+                ->handlerObject
+                ->writeFile($directory, THIRD_OUTPUT . '.' . $fileFormat, $filteredData);
+        } catch (DataExceptions $e) {
+            echo 'Filter error: ' . $e->getMessage() . PHP_EOL;
+        }
+
+        try {
+            $filteredData = $this
+                ->dataFilter
+                ->getAllDataPopForm($parsedData);
+            unset($filteredData[1]);
+            $counters[] = count($filteredData) - 1;
+
+            $this
+                ->handlerObject
+                ->writeFile($directory, FOURTH_OUTPUT . '.' . $fileFormat, $filteredData);
+        } catch (DataExceptions $e) {
+            echo $e->getMessage();
+        }
         $counters[] = count($parsedData) - 1;
 
-        $this->adapter = new Adapter(new InfoHandler(), $directory, $fileFormat);
+        $this->infoAdapter = new InfoAdapter(new InfoHandler(), $directory, $fileFormat);
 
         $data = $this
-            ->adapter
+            ->infoAdapter
             ->parse($counters);
 
-        $this
-            ->adapter
-            ->writeFile($directory, 'infoAboutFiles.txt', $data, FILE_APPEND);
-
+        $this->fileHandler->writeFile($directory, 'infoAboutFiles.txt', $data);
         echo 'Ready!' . PHP_EOL;
     }
 }

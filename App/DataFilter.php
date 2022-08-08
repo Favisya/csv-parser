@@ -4,6 +4,10 @@ class DataFilter
 {
     public function filterDataByCountrySplit(array $data, int $splitToWords): array
     {
+        if ($splitToWords < 1) {
+            throw new DataExceptions('Cant split to 1 and smaller');
+        }
+
         $resultData[] = $data[0];
         foreach ($data as $element) {
             $temp = explode(' ', $element['country']);
@@ -17,6 +21,10 @@ class DataFilter
 
     public function filterDataByCountry(array $data, string $country): array
     {
+        if (empty($country)) {
+            throw new DataExceptions('Parameter is empty');
+        }
+
         $resultData = [];
         foreach ($data as $element) {
             if ($element['country'] === $country) {
@@ -66,7 +74,6 @@ class DataFilter
 
         return ($a['population'] < $b['population']) ? -1 : 1;
     }
-
 
     private function getFormattedPopulation(int $population, int $byNumber, string $separator): string
     {

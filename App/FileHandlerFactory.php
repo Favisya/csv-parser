@@ -10,7 +10,7 @@ class FileHandlerFactory
             case FORMATS['csv']:
                 return new CsvHandler();
             default:
-                return '';
+                throw new FileHandlerExceptions('Incorrect file format');
         }
     }
 }
