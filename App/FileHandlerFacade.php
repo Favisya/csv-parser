@@ -83,6 +83,5 @@ class FileHandlerFacade
             $intoStringData[] = implode('|', $element) . PHP_EOL;
         }
         $this->fileHandler->writeFile($directory, 'output_data', $intoStringData);
-
     }
 }
