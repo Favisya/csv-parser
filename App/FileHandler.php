@@ -13,7 +13,7 @@ class FileHandler
     public function parse(array $data): array
     {
         if (empty($data)) {
-            throw new FileHandlerExceptions('Input data is empty');
+            throw new FileHandlerException('Input data is empty');
         }
 
         $parsedData = [];
@@ -68,7 +68,7 @@ class FileHandler
     protected function isFileExists(string $file): bool
     {
         if (!file_exists($file)) {
-            throw new FileHandlerExceptions("input file does not exists");
+            throw new FileHandlerException("input file does not exists");
         }
 
         return true;

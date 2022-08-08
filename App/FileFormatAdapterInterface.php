@@ -1,6 +1,6 @@
 <?php
 
-interface FileFormatAdapter
+interface FileFormatAdapterInterface
 {
     public function parse(array $data);
 

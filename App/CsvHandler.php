@@ -13,7 +13,7 @@ class CsvHandler extends FileHandler
         $this->makeDirectory($directory);
 
         if (empty($data)) {
-            throw new DataExceptions('Output data is empty');
+            throw new DataException('Output data is empty');
         }
 
         $fileOpen = fopen($path, 'w');

@@ -5,7 +5,7 @@ class DataFilter
     public function filterDataByCountrySplit(array $data, int $splitToWords): array
     {
         if ($splitToWords < 1) {
-            throw new DataExceptions('Cant split to 1 and smaller');
+            throw new DataException('Cant split to 1 and smaller');
         }
 
         $resultData[] = $data[0];
@@ -22,7 +22,7 @@ class DataFilter
     public function filterDataByCountry(array $data, string $country): array
     {
         if (empty($country)) {
-            throw new DataExceptions('Parameter is empty');
+            throw new DataException('Parameter is empty');
         }
 
         $resultData = [];
@@ -63,6 +63,7 @@ class DataFilter
             $resultData[] = $element;
         }
 
+        unset($resultData[1]);
         return $resultData;
     }
 

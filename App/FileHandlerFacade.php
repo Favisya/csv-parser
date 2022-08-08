@@ -17,6 +17,7 @@ class FileHandlerFacade
     protected $fileHandler;
     protected $handlerObject;
     protected $infoAdapter;
+    protected $txtAdapter;
     protected $dataFilter;
 
     public function __construct()
@@ -33,102 +34,55 @@ class FileHandlerFacade
     ): void {
         $explodeFileName = explode('.', $filePointer);
 
+        $infoCounters = [];
+
         try {
             $this->handlerObject = $this->fileHandlerFactory->create($explodeFileName[1]);
-        } catch (FileHandlerExceptions $e) {
-            echo 'Error:' . $e->getMessage() . PHP_EOL;
-        }
 
-        try {
-            $parsedData = $this
-                ->handlerObject
-                ->parse($this
-                    ->handlerObject
-                    ->readFile($filePointer));
-        } catch (FileHandlerExceptions $e) {
-            echo 'Error:' . $e->getMessage() . PHP_EOL;
-        }
+            $readFile = $this->handlerObject->readFile($filePointer);
+            $parsedData = $this->handlerObject->parse($readFile);
 
-        try {
             $this->handlerObject = $this->fileHandlerFactory->create($fileFormat);
-            $counters = [];
-        } catch (FileHandlerExceptions $e) {
+        } catch (FileHandlerException $e) {
             echo 'Error:' . $e->getMessage() . PHP_EOL;
         }
 
         try {
-            $filteredData = $this
-                ->dataFilter
-                ->filterDataByCountrySplit($parsedData, 1);
-            $counters[] = count($filteredData) - 1;
+            $filteredData = $this->dataFilter->filterDataByCountrySplit($parsedData, 1);
+            $infoCounters[] = count($filteredData) - 1;
+            $this->handlerObject->writeFile($directory, FIRST_OUTPUT . '.' . $fileFormat, $filteredData);
 
-            $this
-                ->handlerObject
-                ->writeFile($directory, FIRST_OUTPUT . '.' . $fileFormat, $filteredData);
-        } catch (DataExceptions $e) {
-            echo 'Filter error: ' . $e->getMessage() . PHP_EOL;
-        }
+            $filteredData = $this->dataFilter->filterDataByCountry($parsedData, 'Russia');
+            $infoCounters[] = count($filteredData) - 1;
+            $this->handlerObject->writeFile($directory, SECOND_OUTPUT . '.' . $fileFormat, $filteredData);
 
-        try {
-            $filteredData = $this
-                ->dataFilter
-                ->filterDataByCountrySplit($parsedData, 1);
-            $counters[] = count($filteredData) - 1;
+            $filteredData = $this->dataFilter->filterDataByLatOrLng($parsedData, 0);
+            $infoCounters[] = count($filteredData) - 1;
+            $this->handlerObject->writeFile($directory, THIRD_OUTPUT . '.' . $fileFormat, $filteredData);
 
-            $this
-                ->handlerObject
-                ->writeFile($directory, FIRST_OUTPUT . '.' . $fileFormat, $filteredData);
-        } catch (DataExceptions $e) {
-            echo 'Filter error: ' . $e->getMessage() . PHP_EOL;
-        }
+            $filteredData = $this->dataFilter->getAllDataPopForm($parsedData);
+            $infoCounters[] = count($filteredData) - 1;
+            $this->handlerObject->writeFile($directory, FOURTH_OUTPUT . '.' . $fileFormat, $filteredData);
 
-        try {
-            $filteredData = $this
-                ->dataFilter
-                ->filterDataByCountry($parsedData, 'Russia');
-            $counters[] = count($filteredData) - 1;
-
-            $this
-                ->handlerObject
-                ->writeFile($directory, SECOND_OUTPUT . '.' . $fileFormat, $filteredData);
-        } catch (DataExceptions $e) {
-            echo 'Filter error: ' . $e->getMessage() . PHP_EOL;
-        }
-
-        try {
-            $filteredData = $this
-                ->dataFilter
-                ->filterDataByLatOrLng($parsedData, 0);
-            $counters[] = count($filteredData) - 1;
-
-            $this
-                ->handlerObject
-                ->writeFile($directory, THIRD_OUTPUT . '.' . $fileFormat, $filteredData);
-        } catch (DataExceptions $e) {
-            echo 'Filter error: ' . $e->getMessage() . PHP_EOL;
-        }
-
-        try {
-            $filteredData = $this
-                ->dataFilter
-                ->getAllDataPopForm($parsedData);
-            unset($filteredData[1]);
-            $counters[] = count($filteredData) - 1;
-
-            $this
-                ->handlerObject
-                ->writeFile($directory, FOURTH_OUTPUT . '.' . $fileFormat, $filteredData);
-        } catch (DataExceptions $e) {
+            $infoCounters[] = count($parsedData) - 1;
+        } catch (DataException $e) {
             echo $e->getMessage();
         }
-        $counters[] = count($parsedData) - 1;
 
-        $this->infoAdapter = new InfoAdapter(new InfoHandler(), $directory, $fileFormat);
-
-        $data = $this
-            ->infoAdapter
-            ->parse($counters);
-
+        $this->infoAdapter = new InfoAdapterInterface(new InfoHandler(), $directory, $fileFormat);
+        $data = $this->infoAdapter->parse($infoCounters);
         $this->fileHandler->writeFile($directory, 'infoAboutFiles.txt', $data);
+
+        $data = $this->fileHandler->readFile('5_input_data_2.txt');
+        $this->txtAdapter = new TxtAdapterInterface(new TxtHAndler(), $fileFormat);
+        $txtData = $this->txtAdapter->parse($data);
+
+        $filteredData = $this->dataFilter->filterDataByCountry($txtData, 'Russia');
+        $intoStringData = [];
+        foreach ($filteredData as $element) {
+            $intoStringData[] = implode('|', $element) . PHP_EOL;
+        }
+        $this->fileHandler->writeFile($directory, 'output_data', $intoStringData);
+
     }
 }
