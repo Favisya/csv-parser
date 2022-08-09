@@ -1,10 +1,10 @@
 <?php
 
-class InfoHandler extends FileHandler
+class InfoHandler
 {
-    public function getInfoAboutFiles(string $directory, string $fileFormat, array $counters): string
+    public function getInfoAboutFiles(string $directory, string $fileFormat, array $counters): array
     {
-        $inputCount = $counters[count($counters) - 1];
+        $inputCount = end($counters);
         $files = [];
         foreach (glob($directory . '/' . "*.$fileFormat") as $i => $filename) {
             $filename = explode('/', $filename);
@@ -14,12 +14,13 @@ class InfoHandler extends FileHandler
             ];
         }
 
-        $outputText = 'input rows: ' . $inputCount . PHP_EOL;
-        $outputText .= 'OUTPUT' . PHP_EOL ;
+        $parsedText = [];
+        $parsedText[] = 'input rows: ' . $inputCount . PHP_EOL;
+        $parsedText[] = 'OUTPUT' . PHP_EOL;
         foreach ($files as $file) {
-            $outputText .= $file['file'] . ' rows: ' . $file['count'] . PHP_EOL;
+            $parsedText[] = $file['file'] . ' rows: ' . $file['count'] . PHP_EOL;
         }
 
-        return $outputText;
+        return $parsedText;
     }
 }

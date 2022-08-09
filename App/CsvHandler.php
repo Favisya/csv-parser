@@ -7,19 +7,14 @@ class CsvHandler extends FileHandler
         return str_getcsv($element);
     }
 
-    /**
-     * Write csv data to file
-     *
-     * @param string $directory
-     * @param string $file
-     * @param array  $data
-     *
-     * @return bool
-     */
-    public function writeFile(string $directory, string $file, $data): bool
+    public function writeFile(string $directory, string $file, array $data): bool
     {
         $path = $directory . '/' . $file;
         $this->makeDirectory($directory);
+
+        if (empty($data)) {
+            throw new DataException('Output data is empty');
+        }
 
         $fileOpen = fopen($path, 'w');
         foreach ($data as $element) {

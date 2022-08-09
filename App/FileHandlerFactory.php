@@ -1,6 +1,6 @@
 <?php
 
-class Factory
+class FileHandlerFactory
 {
     public function create($type)
     {
@@ -10,7 +10,7 @@ class Factory
             case FORMATS['csv']:
                 return new CsvHandler();
             default:
-                return '';
+                throw new FileHandlerException('Incorrect file format');
         }
     }
 }

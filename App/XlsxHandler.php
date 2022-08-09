@@ -18,17 +18,7 @@ class XlsxHandler extends FileHandler
         return $spreadSheet->getSheet(0)->toArray();
     }
 
-    /**
-     * Write xlsx data to file
-     *
-     * @param string $directory
-     * @param string $file
-     * @param array  $data
-     *
-     * @return bool
-     * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
-     */
-    public function writeFile(string $directory, string $file, $data): bool
+    public function writeFile(string $directory, string $file, array $data): bool
     {
         $this->makeDirectory($directory);
 

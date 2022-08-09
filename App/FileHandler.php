@@ -12,6 +12,10 @@ class FileHandler
 
     public function parse(array $data): array
     {
+        if (empty($data)) {
+            throw new FileHandlerException('Input data is empty');
+        }
+
         $parsedData = [];
         foreach ($data as $element) {
             $element = $this->parseRow($element);
@@ -37,21 +41,12 @@ class FileHandler
         return [];
     }
 
-    /**
-     * Write data to file
-     *
-     * @param string        $directory
-     * @param string        $file
-     * @param array|string  $data
-     *
-     * @return bool
-     */
-    public function writeFile(string $directory, string $file, $data): bool
+    public function writeFile(string $directory, string $file, array $data): bool
     {
         $path = $directory . '/' . $file;
         $this->makeDirectory($directory);
 
-        return (bool) file_put_contents($path, $data);
+        return file_put_contents($path, $data);
     }
 
 
@@ -73,10 +68,8 @@ class FileHandler
     protected function isFileExists(string $file): bool
     {
         if (!file_exists($file)) {
-            echo "File $file does not exists" . PHP_EOL;
-            return false;
+            throw new FileHandlerException("input file does not exists");
         }
-        echo "File $file exists" . PHP_EOL;
 
         return true;
     }
