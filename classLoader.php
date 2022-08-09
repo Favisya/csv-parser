@@ -9,7 +9,7 @@ foreach ($classes as $class) {
     $baseSubStr      = stripos($class, 'FileHandler');
 
     if ($baseSubStr === 0 || $abstractSubStr === 0 || $interfaceSubStr) {
-        array_unshift($filteredClasses, $class);
+        array_unshift($filteredClasses, $class);        
     } else {
         $filteredClasses[] = $class;
     }

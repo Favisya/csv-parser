@@ -40,7 +40,9 @@ extends [FileHandler](#FileHandler)
 
 methods:
 
-- `public function readFile(string $file): array`
+- `public function parseRow($element): array`
+
+  Method for parent class which do another parse
 - `public function writeFile(string $directory, string $file, $data): bool`
 
 
@@ -63,6 +65,11 @@ methods:
 
   return info about all output files 
 
+#### TxtHandler
+Handle Txt Files 
+
+- `public function superAnotherParse($data): array`
+
 #### DataFilter
 Filter data by arguments 
 
@@ -80,9 +87,45 @@ methods:
    return formatted population for getAllByPopulationDesc
 
 
-#### Factory
+#### FileHandlerFactory
 Return object([CsvHandler](#CsvHandler) || [XlsxHandler](#XlsxHandler))
 
 methods:
 
 - `public function create($type)`
+
+#### FileHandlerFacade
+
+- ` public static function getInstance(): self` 
+
+  Singleton Facade
+- ` public function runFileHandler(
+  string $filePointer,
+  string $directory = 'output',
+  string $fileFormat = 'csv'): void`
+
+#### FileFormatAdapterInterface
+Interface for adapters 
+
+- `public function parse(array $data)`
+
+#### InfoAdapter
+Impliments [FileformatAdapterInterface](#FileFormatAdapterInterface)
+
+- ` public function parse(array $data): array`
+
+
+#### TxtAdapter
+Impliments [FileformatAdapterInterface](#FileFormatAdapterInterface)
+
+- ` public function parse(array $data): array`
+
+#### FileHandlerException
+extends Exception
+
+Exception class for files error 
+
+#### DataException
+extends Exception
+
+Exception class for data handle error 
