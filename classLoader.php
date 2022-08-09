@@ -7,17 +7,10 @@ foreach ($classes as $class) {
     $interfaceSubStr = stripos($class, 'Interface');
     $abstractSubStr  = stripos($class, 'Abstract');
     $baseSubStr      = stripos($class, 'FileHandler');
-    $adapterSubStr   = stripos($class, 'Adapter');
 
-    if ($baseSubStr === 0) {
+    if ($baseSubStr === 0 || $abstractSubStr === 0 || $interfaceSubStr) {
         array_unshift($filteredClasses, $class);
-    } elseif ($abstractSubStr === 0) {
-        array_unshift($filteredClasses, $class);
-    } elseif ($interfaceSubStr) {
-        array_unshift($filteredClasses, $class);
-    } elseif (!$adapterSubStr) {
-        $filteredClasses[] = $class;
-    } elseif ($adapterSubStr) {
+    } else {
         $filteredClasses[] = $class;
     }
 }
