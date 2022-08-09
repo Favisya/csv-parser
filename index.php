@@ -4,11 +4,17 @@
 require_once 'vendor/autoload.php';
 require      'classLoader.php';
 
-$fileFormat = 'csv';
-$fileFormatFromConsole = $argv[2];
-if ($argv[2] !== null) {
-    $fileFormat = $fileFormatFromConsole;
-}
+$fileFromConsole = $argv[1] ?? null;
 
-$app = FileHandlerFacade::getInstance();
-$app->runFileHandler($argv[1], 'output', $fileFormat);
+try {
+    if ($fileFromConsole === null) {
+        throw new FileHandlerException('File does not entered!');
+    }
+
+    $fileFormatFromConsole = $argv[2] ?? 'csv';
+
+    $app = FileHandlerFacade::getInstance();
+    $app->runFileHandler($fileFromConsole, 'output', $fileFormatFromConsole);
+} catch (FileHandlerException $e) {
+    echo $e->getMessage() . PHP_EOL;
+}
