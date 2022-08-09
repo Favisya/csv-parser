@@ -4,11 +4,11 @@ $classes  = array_slice(scandir('App'), 2);
 
 $filteredClasses = [];
 foreach ($classes as $class) {
-    $interfaceSubStr = stripos($class, 'Interface');
-    $abstractSubStr  = stripos($class, 'Abstract');
-    $baseSubStr      = stripos($class, 'FileHandler');
+    (bool) $isInterfaceSubStr = stripos($class, 'Interface');
+    (bool) $isAbstractSubStr  = stripos($class, 'Abstract');
+    (bool) $isBaseSubStr      = stripos($class, 'FileHandler');
 
-    if ($baseSubStr === 0 || $abstractSubStr === 0 || $interfaceSubStr) {
+    if ($isBaseSubStr !== false || $isAbstractSubStr !== false || $isInterfaceSubStr !== false) {
         array_unshift($filteredClasses, $class);        
     } else {
         $filteredClasses[] = $class;
