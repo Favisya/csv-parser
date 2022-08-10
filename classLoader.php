@@ -1,20 +1,22 @@
 <?php
 
-$classes  = array_slice(scandir('App'), 2);
+spl_autoload_register(function ($class) {
+    $file = $class . '.php';
+    $file = str_replace('\\', '/', $file);
 
-$filteredClasses = [];
-foreach ($classes as $class) {
-    $isInterface = stripos($class, 'Interface') !== false;
-    $isAbstract  = stripos($class, 'Abstract') !== false;
-    $isMainApp   = stripos($class, 'FileHandler') !== false;
+    $prefix = 'App\\';
 
-    if ($isMainApp || $isInterface || $isAbstract) {
-        array_unshift($filteredClasses, $class);        
-    } else {
-        $filteredClasses[] = $class;
+    $baseDir = __DIR__ . '/App/';
+
+    $len = strlen($prefix);
+    if (strncmp($prefix, $class, $len) !== 0) {
+        return;
     }
-}
 
-foreach ($filteredClasses as $class) {
-    require_once 'App/' . $class;
-}
+    $relative_class = substr($class, $len);
+    $file = $baseDir . str_replace('\\', '/', $relative_class) . '.php';
+
+    if (file_exists($file)) {
+        require_once $file;
+    }
+});

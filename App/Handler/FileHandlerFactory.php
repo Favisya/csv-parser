@@ -1,5 +1,11 @@
 <?php
 
+namespace App\Handler;
+
+use App\SubHandler\XlsxHandler;
+use App\SubHandler\CsvHandler;
+use App\ProjectException\FileHandlerException;
+
 class FileHandlerFactory
 {
     public function create($type)

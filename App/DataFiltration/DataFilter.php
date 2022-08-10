@@ -1,5 +1,9 @@
 <?php
 
+namespace App\DataFiltration;
+
+use App\ProjectException\DataException;
+
 class DataFilter
 {
     public function filterDataByCountrySplit(array $data, int $splitToWords): array

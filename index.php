@@ -1,8 +1,12 @@
 #!/usr/bin/php
 <?php
 
+require_once 'App/AnotherStuff/constants.php';
 require_once 'vendor/autoload.php';
 require      'classLoader.php';
+
+use App\Handler\FileHandlerFacade;
+use App\ProjectException\FileHandlerException;
 
 $fileFromConsole = $argv[1] ?? null;
 

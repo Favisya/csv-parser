@@ -1,5 +1,9 @@
 <?php
 
+namespace App\Handler;
+
+use App\ProjectException\FileHandlerException;
+
 class FileHandler
 {
     const COLUMN_CITY       = 'city';

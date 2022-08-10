@@ -1,5 +1,9 @@
 <?php
 
+namespace App\FileFormatAdapter;
+
+use App\SubHandler\InfoHandler;
+
 class InfoAdapter implements FileFormatAdapterInterface
 {
     private $infoHandler;

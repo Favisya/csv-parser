@@ -1,9 +1,17 @@
 <?php
 
+namespace App\SubHandler;
+
+use App\ProjectException\DataException;
+
 class InfoHandler
 {
     public function getInfoAboutFiles(string $directory, string $fileFormat, array $counters): array
     {
+        if (empty($counters)) {
+            throw new DataException('input counters is empty!');
+        }
+
         $inputCount = end($counters);
         $files = [];
         foreach (glob($directory . '/' . "*.$fileFormat") as $i => $filename) {

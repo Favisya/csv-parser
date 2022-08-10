@@ -1,5 +1,9 @@
 <?php
 
+namespace App\FileFormatAdapter;
+
+use App\SubHandler\TxtHAndler;
+
 class TxtAdapter implements FileFormatAdapterInterface
 {
     private $txtHandler;
