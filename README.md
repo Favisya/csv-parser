@@ -79,6 +79,10 @@ methods:
 - `public function filterDataByCountry(array $data, string $country): array`
 - `public function filterDataByLatOrLng(array $data, int $number): array`
 - `public function getAllDataPopForm(array $data): array`
+- `public function filterDataByCity(array $data, string $city): array`
+- `public function filterDataSameLetter(array $data): array`
+- `public function getRegionTowns(array $data, array $region): array`
+- `public function getAllRegions(array $data, array $regions): array`
 - `private function sortByPopulationDesc($a, $b): int`
 
    return sorted array for filter by country
