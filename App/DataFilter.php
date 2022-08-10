@@ -37,6 +37,40 @@ class DataFilter
         return $resultData;
     }
 
+    public function filterDataByCity(array $data, string $city): array
+    {
+        if (empty($city)) {
+            throw new DataException('Parameter is empty');
+        }
+
+        $resultData = [];
+        foreach ($data as $element) {
+            $isSubStr = stripos($element['city'], $city) !== false;
+            if ($isSubStr) {
+                $resultData[] = $element;
+            }
+        }
+
+        array_unshift($resultData, $data[0]);
+        return $resultData;
+    }
+
+    public function filterDataSameLetter(array $data): array
+    {
+        if (empty($data)) {
+            throw new DataException('input data is empty');
+        }
+
+        $resultData = [];
+        foreach ($data as $element) {
+            if ($element['city'][0] === $element['country'][0]) {
+                $resultData[] = $element;
+            }
+        }
+
+        return $resultData;
+    }
+
     public function filterDataByLatOrLng(array $data, int $number): array
     {
         $resultData[] = $data[0];
@@ -59,11 +93,44 @@ class DataFilter
             $populationFormatted  = $this->getFormattedPopulation((int)$element['population'], 1000000, 'млн');
             $populationFormatted .= $this->getFormattedPopulation((int)$element['population'], 1000, 'тыс');
             $populationFormatted .= $this->getFormattedPopulation((int)$element['population'], 1, '');
-            $element[] = $populationFormatted;
+            $element[]    = $populationFormatted;
             $resultData[] = $element;
         }
 
         unset($resultData[1]);
+        return $resultData;
+    }
+
+    public function getRegionTowns(array $data, array $region): array
+    {
+        if (empty($data)) {
+            throw new DataException('input data is empty!');
+        }
+        $minLng = min($region['east'], $region['west']);
+        $maxLng = max($region['east'], $region['west']);
+        $minLat = min($region['north'], $region['south']);
+        $maxLat = max($region['north'], $region['south']);
+
+        $resultData = [];
+        foreach ($data as $element) {
+            if (
+                $element['lng'] >= $minLng && $element['lng'] <= $maxLng
+                && $element['lat'] >= $minLat && $element['lat'] <= $maxLat
+            ) {
+                $resultData[] = $element;
+            }
+        }
+
+        return $resultData;
+    }
+
+    public function getAllRegions(array $data, array $regions): array
+    {
+        $resultData = [];
+        foreach ($regions as $region) {
+            $resultData[] = $this->getRegionTowns($data, $region);
+        }
+
         return $resultData;
     }
 
