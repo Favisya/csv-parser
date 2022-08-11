@@ -4,16 +4,16 @@ namespace App\Handler;
 
 use App\SubHandler\XlsxHandler;
 use App\SubHandler\CsvHandler;
-use App\ProjectException\FileHandlerException;
+use App\Exception\FileHandlerException;
 
 class FileHandlerFactory
 {
     public function create($type)
     {
         switch ($type) {
-            case FORMATS['xlsx']:
+            case FORMAT_EXCEL:
                 return new XlsxHandler();
-            case FORMATS['csv']:
+            case FORMAT_CSV:
                 return new CsvHandler();
             default:
                 throw new FileHandlerException('Incorrect file format');

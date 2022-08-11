@@ -2,7 +2,7 @@
 
 namespace App\DataFiltration;
 
-use App\ProjectException\DataException;
+use App\Exception\DataException;
 
 class DataFilter
 {

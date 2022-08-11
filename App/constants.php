@@ -1,9 +1,7 @@
 <?php
 
-const FORMATS = [
-    'xlsx' => 'xlsx',
-    'csv'  => 'csv'
-];
+const FORMAT_EXCEL = 'xlsx';
+const FORMAT_CSV   = 'csv';
 
 const EXTREME_POINTS = [
     'asia' => [

@@ -2,7 +2,7 @@
 
 namespace App\SubHandler;
 
-use App\ProjectException\DataException;
+use App\Exception\DataException;
 
 class TxtHAndler
 {

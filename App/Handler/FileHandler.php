@@ -2,7 +2,7 @@
 
 namespace App\Handler;
 
-use App\ProjectException\FileHandlerException;
+use App\Exception\FileHandlerException;
 
 class FileHandler
 {

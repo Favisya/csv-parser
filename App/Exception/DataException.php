@@ -1,8 +1,8 @@
 <?php
 
-namespace App\ProjectException;
+namespace App\Exception;
 
-use Exception;
+use \Exception;
 
 class DataException extends Exception
 {

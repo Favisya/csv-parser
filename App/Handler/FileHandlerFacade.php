@@ -3,8 +3,8 @@
 namespace App\Handler;
 
 use App\DataFiltration\DataFilter;
-use App\ProjectException\FileHandlerException;
-use App\ProjectException\DataException;
+use App\Exception\FileHandlerException;
+use App\Exception\DataException;
 use App\SubHandler\InfoHandler;
 use App\SubHandler\TxtHandler;
 use App\FileFormatAdapter\TxtAdapter;
