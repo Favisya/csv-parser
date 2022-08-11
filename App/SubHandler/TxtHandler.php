@@ -1,5 +1,9 @@
 <?php
 
+namespace App\SubHandler;
+
+use App\Exception\DataException;
+
 class TxtHAndler
 {
     public function superAnotherParse($data): array

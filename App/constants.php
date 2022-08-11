@@ -1,10 +1,5 @@
 <?php
 
-const FORMATS = [
-    'xlsx' => 'xlsx',
-    'csv'  => 'csv'
-];
-
 const EXTREME_POINTS = [
     'asia' => [
         'north' => 77.43, 'south' => 1.16,

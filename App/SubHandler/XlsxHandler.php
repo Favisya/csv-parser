@@ -1,8 +1,11 @@
 <?php
 
+namespace App\SubHandler;
+
+use App\Handler\FileHandler;
+use PhpOffice\PhpSpreadsheet\Reader\Xlsx as XlsxReader;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
-use PhpOffice\PhpSpreadsheet\Reader\Xlsx as XlsxReader;
 
 class XlsxHandler extends FileHandler
 {

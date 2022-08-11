@@ -1,5 +1,10 @@
 <?php
 
+namespace App\SubHandler;
+
+use App\Exception\DataException;
+use App\Handler\FileHandler;
+
 class CsvHandler extends FileHandler
 {
     public function parseRow($element): array
