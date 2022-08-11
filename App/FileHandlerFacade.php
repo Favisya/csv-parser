@@ -64,6 +64,28 @@ class FileHandlerFacade
             $infoCounters[] = count($filteredData) - 1;
             $this->handlerObject->writeFile($directory, FOURTH_OUTPUT . '.' . $fileFormat, $filteredData);
 
+            $filteredData = $this->dataFilter->filterDataByCity($parsedData, 'saint');
+            $infoCounters[] = count($filteredData) - 1;
+            $this->handlerObject->writeFile($directory, FIFTH_OUTPUT . '.' . $fileFormat, $filteredData);
+
+            $filteredData = $this->dataFilter->filterDataSameLetter($parsedData);
+            $infoCounters[] = count($filteredData) - 1;
+            $this->handlerObject->writeFile($directory, SIX_OUTPUT . '.' . $fileFormat, $filteredData);
+
+            $filteredData = $this->dataFilter->getAllRegions($parsedData, EXTREME_POINTS);
+            foreach ($filteredData as $item) {
+                $infoCounters[] = count($item) - 1;
+            }
+            $i = 0;
+            foreach (REGION_PREFIX as $region) {
+                $this->handlerObject->writeFile(
+                    $directory,
+                    SEVEN_OUTPUT . "_$region." . $fileFormat,
+                    $filteredData[$i++]
+                );
+            }
+
+
             $infoCounters[] = count($parsedData) - 1;
         } catch (DataException $e) {
             echo $e->getMessage();
@@ -73,15 +95,19 @@ class FileHandlerFacade
         $data = $this->infoAdapter->parse($infoCounters);
         $this->fileHandler->writeFile($directory, 'infoAboutFiles.txt', $data);
 
-        $data = $this->fileHandler->readFile('5_input_data_2.txt');
-        $this->txtAdapter = new TxtAdapter(new TxtHAndler(), $fileFormat);
-        $txtData = $this->txtAdapter->parse($data);
+        try {
+            $data = $this->fileHandler->readFile('5_input_data_2.txt');
+            $this->txtAdapter = new TxtAdapter(new TxtHAndler(), $fileFormat);
+            $txtData = $this->txtAdapter->parse($data);
 
-        $filteredData = $this->dataFilter->filterDataByCountry($txtData, 'Russia');
-        $intoStringData = [];
-        foreach ($filteredData as $element) {
-            $intoStringData[] = implode('|', $element) . PHP_EOL;
+            $filteredData = $this->dataFilter->filterDataByCountry($txtData, 'Russia');
+            $intoStringData = [];
+            foreach ($filteredData as $element) {
+                $intoStringData[] = implode('|', $element) . PHP_EOL;
+            }
+            $this->fileHandler->writeFile($directory, 'output_data', $intoStringData);
+        } catch (DataException $e) {
+            echo 'Error: ' . $e->getMessage() . PHP_EOL;
         }
-        $this->fileHandler->writeFile($directory, 'output_data', $intoStringData);
     }
 }

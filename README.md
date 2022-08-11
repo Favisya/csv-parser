@@ -9,8 +9,8 @@ Handler for csv, xlsx file formats
 There is 2 variant:
 Go to the file dir and run
 
-- `php -r "require 'index.php'; runHandler('5_input_data_2.csv');"`
-- `php -r "require 'index.php'; runHandler('5_input_data_2.csv', 'output', 'xlsx');"`
+- `php index.php '5_input_data_2.csv'`
+- `php index.php '5_input_data_2.csv' 'xlsx''`
 
 first variant has default output dir "output" and file format "csv".
 
@@ -40,7 +40,9 @@ extends [FileHandler](#FileHandler)
 
 methods:
 
-- `public function readFile(string $file): array`
+- `public function parseRow($element): array`
+
+  Method for parent class which do another parse
 - `public function writeFile(string $directory, string $file, $data): bool`
 
 
@@ -63,6 +65,11 @@ methods:
 
   return info about all output files 
 
+#### TxtHandler
+Handle Txt Files 
+
+- `public function superAnotherParse($data): array`
+
 #### DataFilter
 Filter data by arguments 
 
@@ -72,6 +79,10 @@ methods:
 - `public function filterDataByCountry(array $data, string $country): array`
 - `public function filterDataByLatOrLng(array $data, int $number): array`
 - `public function getAllDataPopForm(array $data): array`
+- `public function filterDataByCity(array $data, string $city): array`
+- `public function filterDataSameLetter(array $data): array`
+- `public function getRegionTowns(array $data, array $region): array`
+- `public function getAllRegions(array $data, array $regions): array`
 - `private function sortByPopulationDesc($a, $b): int`
 
    return sorted array for filter by country
@@ -80,9 +91,45 @@ methods:
    return formatted population for getAllByPopulationDesc
 
 
-#### Factory
+#### FileHandlerFactory
 Return object([CsvHandler](#CsvHandler) || [XlsxHandler](#XlsxHandler))
 
 methods:
 
 - `public function create($type)`
+
+#### FileHandlerFacade
+
+- ` public static function getInstance(): self` 
+
+  Singleton Facade
+- ` public function runFileHandler(
+  string $filePointer,
+  string $directory = 'output',
+  string $fileFormat = 'csv'): void`
+
+#### FileFormatAdapterInterface
+Interface for adapters 
+
+- `public function parse(array $data)`
+
+#### InfoAdapter
+Impliments [FileformatAdapterInterface](#FileFormatAdapterInterface)
+
+- ` public function parse(array $data): array`
+
+
+#### TxtAdapter
+Impliments [FileformatAdapterInterface](#FileFormatAdapterInterface)
+
+- ` public function parse(array $data): array`
+
+#### FileHandlerException
+extends Exception
+
+Exception class for files error 
+
+#### DataException
+extends Exception
+
+Exception class for data handle error 
