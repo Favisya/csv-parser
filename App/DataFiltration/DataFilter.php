@@ -3,6 +3,7 @@
 namespace App\DataFiltration;
 
 use App\Exception\DataException;
+use App\Handler\RowHandler;
 
 class DataFilter
 {
@@ -14,7 +15,7 @@ class DataFilter
 
         $resultData[] = $data[0];
         foreach ($data as $element) {
-            $temp = explode(' ', $element['country']);
+            $temp = explode(' ', $element->getCountry());
             if (count($temp) > $splitToWords) {
                 $resultData[] = $element;
             }
@@ -31,7 +32,7 @@ class DataFilter
 
         $resultData = [];
         foreach ($data as $element) {
-            if ($element['country'] === $country) {
+            if ($element->getCountry() === $country) {
                 $resultData[] = $element;
             }
         }
@@ -49,7 +50,7 @@ class DataFilter
 
         $resultData = [];
         foreach ($data as $element) {
-            $isSubStr = stripos($element['city'], $city) !== false;
+            $isSubStr = stripos($element->getCity(), $city) !== false;
             if ($isSubStr) {
                 $resultData[] = $element;
             }
@@ -67,7 +68,7 @@ class DataFilter
 
         $resultData = [];
         foreach ($data as $element) {
-            if ($element['city'][0] === $element['country'][0]) {
+            if ($element->getCity()[0] === $element->getCountry()[0]) {
                 $resultData[] = $element;
             }
         }
@@ -79,7 +80,7 @@ class DataFilter
     {
         $resultData[] = $data[0];
         foreach ($data as $element) {
-            if ($element['lat'] < $number || $element['lng'] < $number) {
+            if ($element->getLat() < $number || $element->getLng() < $number) {
                 $resultData[] = $element;
             }
         }
@@ -89,15 +90,17 @@ class DataFilter
 
     public function getAllDataPopForm(array $data): array
     {
-        $populationField  = ['populationFormatted' => 'population_formatted'];
-        $data[0] += $populationField;
+        $populationField  = ['population_formatted' => 'population_formatted'];
+        $data[0]->{'addField'}($populationField);
         $resultData[] = $data[0];
 
         foreach ($data as $element) {
-            $populationFormatted  = $this->getFormattedPopulation((int)$element['population'], 1000000, 'млн');
-            $populationFormatted .= $this->getFormattedPopulation((int)$element['population'], 1000, 'тыс');
-            $populationFormatted .= $this->getFormattedPopulation((int)$element['population'], 1, '');
-            $element[]    = $populationFormatted;
+            $populationFormatted  = $this->getFormattedPopulation((int)$element->getPopulation(), 1000000, 'млн');
+            $populationFormatted .= $this->getFormattedPopulation((int)$element->getPopulation(), 1000, 'тыс');
+            $populationFormatted .= $this->getFormattedPopulation((int)$element->getPopulation(), 1, '');
+            $populationFormatted = ['population_formatted' => $populationFormatted];
+
+            $element->{'addField'}($populationFormatted);
             $resultData[] = $element;
         }
 
@@ -118,13 +121,14 @@ class DataFilter
         $resultData = [];
         foreach ($data as $element) {
             if (
-                $element['lng'] >= $minLng && $element['lng'] <= $maxLng
-                && $element['lat'] >= $minLat && $element['lat'] <= $maxLat
+                $element->getLng() >= $minLng && $element->getLng() <= $maxLng
+                && $element->getLat() >= $minLat && $element->getLat() <= $maxLat
             ) {
                 $resultData[] = $element;
             }
         }
 
+        array_unshift($resultData, $data[0]);
         return $resultData;
     }
 
@@ -140,11 +144,11 @@ class DataFilter
 
     private function sortByPopulationDesc($a, $b): int
     {
-        if ($a['population'] == $b['population']) {
+        if ($a->getPopulation() == $b->getPopulation()) {
             return 0;
         }
 
-        return ($a['population'] < $b['population']) ? -1 : 1;
+        return ($a->getPopulation() < $b->getPopulation()) ? -1 : 1;
     }
 
     private function getFormattedPopulation(int $population, int $byNumber, string $separator): string

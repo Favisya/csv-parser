@@ -2,36 +2,52 @@
 
 namespace App\Handler;
 
+use App\Exception\DataException;
 use App\Exception\FileHandlerException;
 
 class FileHandler
 {
-    const COLUMN_CITY       = 'city';
-    const COLUMN_LAT        = 'lat';
-    const COLUMN_LNG        = 'lng';
-    const COLUMN_COUNTRY    = 'country';
-    const COLUMN_ISO2       = 'iso2';
-    const COLUMN_ISO3       = 'iso3';
-    const COLUMN_POPULATION = 'population';
-
     public function parse(array $data): array
     {
         if (empty($data)) {
             throw new FileHandlerException('Input data is empty');
         }
 
+        $header = $this->parseRow($data[0]);
+
         $parsedData = [];
         foreach ($data as $element) {
             $element = $this->parseRow($element);
-            $parsedData[] = [
-                self::COLUMN_CITY       => $element[0],
-                self::COLUMN_LAT        => $element[1],
-                self::COLUMN_LNG        => $element[2],
-                self::COLUMN_COUNTRY    => $element[3],
-                self::COLUMN_ISO2       => $element[4],
-                self::COLUMN_ISO3       => $element[5],
-                self::COLUMN_POPULATION => $element[6]
-            ];
+            $dataObject = new RowHandler($header);
+
+            foreach ($header as $i => $field) {
+                $dataObject->{"set$field"}($element[$i]);
+            }
+
+            $parsedData[] = $dataObject;
+        }
+
+        $dataObject = new RowHandler($header);
+        echo $dataObject;
+
+        return $parsedData;
+    }
+
+    public function reParse(array $data): array
+    {
+        $parsedData = [];
+        if (empty($data)) {
+            throw new DataException('Input data is empty');
+        }
+
+        $header = $data[0]->getKeys();
+        foreach ($data as $element) {
+            $tempData = [];
+            foreach ($header as $field) {
+                $tempData[] = $element->{"get$field"}();
+            }
+
+            $parsedData[] = $tempData;
         }
         return $parsedData;
     }

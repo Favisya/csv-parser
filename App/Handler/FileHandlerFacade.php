@@ -6,8 +6,6 @@ use App\DataFiltration\DataFilter;
 use App\Exception\FileHandlerException;
 use App\Exception\DataException;
 use App\SubHandler\InfoHandler;
-use App\SubHandler\TxtHandler;
-use App\FileFormatAdapter\TxtAdapter;
 use App\FileFormatAdapter\InfoAdapter;
 
 class FileHandlerFacade
@@ -27,7 +25,6 @@ class FileHandlerFacade
     protected $fileHandler;
     protected $handlerObject;
     protected $infoAdapter;
-    protected $txtAdapter;
     protected $dataFilter;
 
     public function __construct()
@@ -60,31 +57,42 @@ class FileHandlerFacade
         try {
             $filteredData = $this->dataFilter->filterDataByCountrySplit($parsedData, 1);
             $infoCounters[] = count($filteredData) - 1;
+            $filteredData = $this->handlerObject->reParse($filteredData);
             $this->handlerObject->writeFile($directory, FIRST_OUTPUT . '.' . $fileFormat, $filteredData);
 
             $filteredData = $this->dataFilter->filterDataByCountry($parsedData, 'Russia');
             $infoCounters[] = count($filteredData) - 1;
+            $filteredData = $this->handlerObject->reParse($filteredData);
             $this->handlerObject->writeFile($directory, SECOND_OUTPUT . '.' . $fileFormat, $filteredData);
 
             $filteredData = $this->dataFilter->filterDataByLatOrLng($parsedData, 0);
             $infoCounters[] = count($filteredData) - 1;
+            $filteredData = $this->handlerObject->reParse($filteredData);
             $this->handlerObject->writeFile($directory, THIRD_OUTPUT . '.' . $fileFormat, $filteredData);
 
             $filteredData = $this->dataFilter->getAllDataPopForm($parsedData);
             $infoCounters[] = count($filteredData) - 1;
+            $data = $filteredData;
+            $filteredData = $this->handlerObject->reParse($filteredData);
             $this->handlerObject->writeFile($directory, FOURTH_OUTPUT . '.' . $fileFormat, $filteredData);
+            foreach ($data as $item) {
+                $item->deleteField('population_formatted');
+            }
 
             $filteredData = $this->dataFilter->filterDataByCity($parsedData, 'saint');
             $infoCounters[] = count($filteredData) - 1;
+            $filteredData = $this->handlerObject->reParse($filteredData);
             $this->handlerObject->writeFile($directory, FIFTH_OUTPUT . '.' . $fileFormat, $filteredData);
 
             $filteredData = $this->dataFilter->filterDataSameLetter($parsedData);
             $infoCounters[] = count($filteredData) - 1;
+            $filteredData = $this->handlerObject->reParse($filteredData);
             $this->handlerObject->writeFile($directory, SIX_OUTPUT . '.' . $fileFormat, $filteredData);
 
             $filteredData = $this->dataFilter->getAllRegions($parsedData, EXTREME_POINTS);
-            foreach ($filteredData as $item) {
+            foreach ($filteredData as $i => $item) {
                 $infoCounters[] = count($item) - 1;
+                $filteredData[$i] = $this->handlerObject->reParse($item);
             }
             $i = 0;
             foreach (REGION_PREFIX as $region) {
@@ -95,7 +103,6 @@ class FileHandlerFacade
                 );
             }
 
-
             $infoCounters[] = count($parsedData) - 1;
         } catch (DataException $e) {
             echo $e->getMessage();
@@ -104,20 +111,5 @@ class FileHandlerFacade
         $this->infoAdapter = new InfoAdapter(new InfoHandler(), $directory, $fileFormat);
         $data = $this->infoAdapter->parse($infoCounters);
         $this->fileHandler->writeFile($directory, 'infoAboutFiles.txt', $data);
-
-        try {
-            $data = $this->fileHandler->readFile('5_input_data_2.txt');
-            $this->txtAdapter = new TxtAdapter(new TxtHAndler(), $fileFormat);
-            $txtData = $this->txtAdapter->parse($data);
-
-            $filteredData = $this->dataFilter->filterDataByCountry($txtData, 'Russia');
-            $intoStringData = [];
-            foreach ($filteredData as $element) {
-                $intoStringData[] = implode('|', $element) . PHP_EOL;
-            }
-            $this->fileHandler->writeFile($directory, 'output_data', $intoStringData);
-        } catch (DataException $e) {
-            echo 'Error: ' . $e->getMessage() . PHP_EOL;
-        }
     }
 }
