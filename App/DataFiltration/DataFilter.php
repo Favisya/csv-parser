@@ -42,15 +42,15 @@ class DataFilter
         return $resultData;
     }
 
-    public function filterDataByCity(array $data, string $city): array
+    public function filterDataByCity(array $data, string $City): array
     {
-        if (empty($city)) {
+        if (empty($City)) {
             throw new DataException('Parameter is empty');
         }
 
         $resultData = [];
         foreach ($data as $element) {
-            $isSubStr = stripos($element->getCity(), $city) !== false;
+            $isSubStr = stripos($element->getCityAscii(), $City) !== false;
             if ($isSubStr) {
                 $resultData[] = $element;
             }
@@ -68,7 +68,7 @@ class DataFilter
 
         $resultData = [];
         foreach ($data as $element) {
-            if ($element->getCity()[0] === $element->getCountry()[0]) {
+            if ($element->getCityAscii()[0] === $element->getCountry()[0]) {
                 $resultData[] = $element;
             }
         }

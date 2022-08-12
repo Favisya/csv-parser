@@ -18,16 +18,17 @@ class FileHandler
         $parsedData = [];
         foreach ($data as $element) {
             $element = $this->parseRow($element);
-            $dataObject = new RowHandler($header);
+            $dataObject = new City($header);
 
             foreach ($header as $i => $field) {
+                $field = $this->convertField($field);
                 $dataObject->{"set$field"}($element[$i]);
             }
 
             $parsedData[] = $dataObject;
         }
 
-        $dataObject = new RowHandler($header);
+        $dataObject = new City($header);
         echo $dataObject;
 
         return $parsedData;
@@ -44,6 +45,7 @@ class FileHandler
         foreach ($data as $element) {
             $tempData = [];
             foreach ($header as $field) {
+                $field = $this->convertField($field);
                 $tempData[] = $element->{"get$field"}();
             }
 
@@ -69,6 +71,17 @@ class FileHandler
         return file_put_contents($path, $data);
     }
 
+
+    private function convertField(string $field): string
+    {
+        $convertField = explode('_', $field);
+        $newField = '';
+
+        foreach ($convertField as $item) {
+            $newField .= ucfirst($item);
+        }
+        return $newField;
+    }
 
     protected function parseRow($element): array
     {

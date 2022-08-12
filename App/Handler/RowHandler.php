@@ -6,7 +6,7 @@ use App\Exception\DataException;
 
 class RowHandler
 {
-    private $data = [];
+    protected $data = [];
 
     public function __construct(array $header)
     {
@@ -15,6 +15,12 @@ class RowHandler
         }
     }
 
+    /**
+     * @param $name
+     * @param $arguments
+     * @return bool|mixed
+     * @throws DataException
+     */
     public function __call($name, $arguments)
     {
         $field = substr($name, 3);
@@ -32,6 +38,8 @@ class RowHandler
             }
         } elseif ($isGet) {
             $dataKeys = array_keys($this->data);
+            $field = preg_split('/(?=[A-Z])/', $field, -1, PREG_SPLIT_NO_EMPTY);
+            $field = implode('_', $field);
             foreach ($dataKeys as $item) {
                 (bool) $isFieldHeader = stripos($item, $field) !== false;
                 if ($isFieldHeader) {
