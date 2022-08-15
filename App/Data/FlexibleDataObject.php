@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Handler;
+namespace App\Data;
 
 use App\Exception\DataException;
 
-class RowHandler
+class FlexibleDataObject
 {
     protected $data = [];
 
@@ -16,9 +16,13 @@ class RowHandler
     }
 
     /**
+     * method get|set@param $name
+     *
      * @param $name
      * @param $arguments
+     *
      * @return bool|mixed
+     *
      * @throws DataException
      */
     public function __call($name, $arguments)

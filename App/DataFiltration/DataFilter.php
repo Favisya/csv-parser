@@ -2,8 +2,8 @@
 
 namespace App\DataFiltration;
 
+use App\Data\City;
 use App\Exception\DataException;
-use App\Handler\RowHandler;
 
 class DataFilter
 {
@@ -95,12 +95,12 @@ class DataFilter
         $resultData[] = $data[0];
 
         foreach ($data as $element) {
-            $populationFormatted  = $this->getFormattedPopulation((int)$element->getPopulation(), 1000000, 'млн');
-            $populationFormatted .= $this->getFormattedPopulation((int)$element->getPopulation(), 1000, 'тыс');
-            $populationFormatted .= $this->getFormattedPopulation((int)$element->getPopulation(), 1, '');
+            $populationFormatted  = $this->getFormattedPopulation($element->getPopulation(), 1000000, 'млн');
+            $populationFormatted .= $this->getFormattedPopulation($element->getPopulation(), 1000, 'тыс');
+            $populationFormatted .= $this->getFormattedPopulation($element->getPopulation(), 1, '');
             $populationFormatted = ['population_formatted' => $populationFormatted];
 
-            $element->{'addField'}($populationFormatted);
+            $element->addField($populationFormatted);
             $resultData[] = $element;
         }
 
@@ -120,9 +120,12 @@ class DataFilter
 
         $resultData = [];
         foreach ($data as $element) {
+            $elementLng = $element->getLng();
+            $elementLat = $element->getLat();
+
             if (
-                $element->getLng() >= $minLng && $element->getLng() <= $maxLng
-                && $element->getLat() >= $minLat && $element->getLat() <= $maxLat
+                $elementLng >= $minLng && $elementLng <= $maxLng
+                && $elementLat >= $minLat && $elementLat <= $maxLat
             ) {
                 $resultData[] = $element;
             }
@@ -142,7 +145,7 @@ class DataFilter
         return $resultData;
     }
 
-    private function sortByPopulationDesc($a, $b): int
+    private function sortByPopulationDesc(City $a,City $b): int
     {
         if ($a->getPopulation() == $b->getPopulation()) {
             return 0;

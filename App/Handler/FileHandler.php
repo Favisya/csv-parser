@@ -2,6 +2,7 @@
 
 namespace App\Handler;
 
+use App\Data\City;
 use App\Exception\DataException;
 use App\Exception\FileHandlerException;
 

@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Handler;
+namespace App\Data;
 
-class City extends RowHandler
+class City extends FlexibleDataObject
 {
     public function getCityAscii(): string
     {
@@ -34,9 +34,9 @@ class City extends RowHandler
         return $this->data['iso3'];
     }
 
-    public function getPopulation(): string
+    public function getPopulation(): int
     {
-        return $this->data['population'];
+        return (int) $this->data['population'];
     }
 
     public function setCityAscii(string $value): void
