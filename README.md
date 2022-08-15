@@ -29,6 +29,10 @@ Base class
 
 methods:
 - `public function parse(array $data): array`
+- `public function reParse(array $data): array`
+- `private function convertField(string $field): string`
+
+   convert key or field from header for call the method
 - `public function readFile(string $file)`
 - `public function writeFile(string $directory, string $file, $data): bool`
 - `protected function makeDirectory($directoryName): bool`
@@ -133,3 +137,43 @@ Exception class for files error
 extends Exception
 
 Exception class for data handle error 
+
+#### FlexibleDataObject
+Class with magic call function for unknown fields of header
+which can set or get field into spreadsheet or csv files 
+
+- `public function __call($name, $arguments)`
+
+  Special call function which can be get or set for unknown fields
+
+- `public function addField($newField)`
+
+  Add new field into header and table
+
+- `public function deleteField($field)`
+- `public function getkeys(): array`
+
+   Return keys of data array in object
+- `public function __tostring()`
+ 
+  Magic function for giving rules when we use this class
+
+#### City 
+extends [FlexibleDataObject](#FlexibleDataObject)
+Class with strictly methods for city format  
+- `public function getCityAscii(): string`
+- `public function getLat(): string`
+- `public function getLng(): string`
+- `public function getIso2(): string`
+- `public function getIso3(): string`
+- `public function getCountry(): string`
+- `public function getPopulation(): string`
+
+
+- `public function setCityAscii(string $value): void`
+- `public function setLat(string $value): void`
+- `public function setLng(string $value): void`
+- `public function setIso2(string $value): void`
+- `public function setIso3(string $value): void`
+- `public function setCountry(string $value): void`
+- `public function setPopulation(string $value): void`
