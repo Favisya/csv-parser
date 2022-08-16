@@ -145,7 +145,7 @@ class DataFilter
         return $resultData;
     }
 
-    private function sortByPopulationDesc(City $a,City $b): int
+    private function sortByPopulationDesc(City $a, City $b): int
     {
         if ($a->getPopulation() == $b->getPopulation()) {
             return 0;
